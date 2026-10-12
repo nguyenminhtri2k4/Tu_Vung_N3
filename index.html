@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mimikara N3 & Đề Thi Các Năm (Thể Masu)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Be+Vietnam+Pro:wght@400;600;700&display=swap');
+
+:root {
+  --bg: #0a0c10;
+  --card: #111318;
+  --border: #1e2330;
+  --accent: #f43f5e;
+  --accent2: #fb923c;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --dim: #64748b;
+  --gold: #fbbf24;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.screen { display: none; width: 100%; max-width: 480px; padding: 20px 16px; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ── MENU ── */
+.logo { text-align: center; padding: 30px 0 24px; }
+.logo-ja { font-family: 'Noto Sans JP', sans-serif; font-size: 13px; color: var(--dim); letter-spacing: 4px; }
+.logo-en { font-size: 28px; font-weight: 700; color: var(--accent); line-height: 1.1; margin: 4px 0; }
+.logo-sub { font-size: 12px; color: var(--dim); }
+
+.total-badge {
+  background: rgba(244,63,94,.1);
+  border: 1px solid rgba(244,63,94,.25);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  color: var(--accent);
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.section-label { font-size: 11px; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; margin: 18px 0 8px; }
+
+.group-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.group-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color .2s, transform .15s;
+  display: flex; align-items: center; gap: 14px;
+}
+.group-card:hover { border-color: var(--accent2); transform: translateX(4px); }
+.group-num {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 22px; font-weight: 900;
+  color: var(--accent2);
+  min-width: 48px; text-align: center;
+}
+.group-info b { display: block; font-size: 14px; font-weight: 700; }
+.group-info span { font-size: 11px; color: var(--dim); line-height: 1.4; }
+.group-count { margin-left: auto; font-size: 11px; color: var(--dim); white-space: nowrap; }
+
+/* ── MODE SELECT ── */
+.mode-header { padding: 20px 0 30px; text-align: center; }
+.mode-header h2 { font-size: 20px; font-weight: 700; color: var(--accent2); }
+.mode-header p { font-size: 12px; color: var(--dim); margin-top: 4px; }
+
+.mode-cards { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.mode-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  cursor: pointer;
+  transition: .2s;
+  flex: 1;
+}
+.mode-card:hover { border-color: var(--accent); background: rgba(244,63,94,.05); }
+.mode-icon { font-size: 32px; margin-bottom: 8px; }
+.mode-card b { display: block; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.mode-card p { font-size: 12px; color: var(--dim); line-height: 1.5; }
+
+.btn-back {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  padding: 9px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: .2s;
+  margin-top: 14px;
+}
+.btn-back:hover { color: var(--text); border-color: var(--dim); }
+
+/* ── QUIZ ── */
+.quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 10px; }
+.q-badge { font-size: 11px; color: var(--dim); background: var(--card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; }
+.q-score { font-size: 13px; color: var(--accent); font-weight: 700; }
+
+.progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 22px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); width: 0%; transition: width .4s ease; border-radius: 2px; }
+
+.q-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 20px;
+  margin-bottom: 20px;
+  gap: 8px;
+}
+.q-main { font-family: 'Noto Sans JP', sans-serif; font-size: 46px; font-weight: 600; line-height: 1.1; word-break: break-word; }
+.q-hint { font-size: 12px; color: var(--dim); }
+
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 16px 18px;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  font-family: inherit;
+  width: 100%;
+  transition: border-color .15s, background .15s;
+  line-height: 1.4;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent2); background: rgba(251,146,60,.06); }
+.opt.correct { border-color: var(--accent) !important; background: rgba(244,63,94,.12) !important; color: var(--accent); font-weight: 700; }
+.opt.wrong { border-color: var(--red) !important; background: rgba(239,68,68,.1) !important; color: var(--red); }
+.opt:disabled { cursor: default; }
+
+/* ── RESULT ── */
+.result-screen { justify-content: center; align-items: center; text-align: center; gap: 16px; }
+.result-emoji { font-size: 72px; line-height: 1; }
+.result-title { font-size: 26px; font-weight: 700; }
+.result-score { font-size: 52px; font-weight: 900; color: var(--accent); font-family: 'Noto Sans JP', sans-serif; }
+.result-label { font-size: 14px; color: var(--dim); }
+.result-pct { font-size: 18px; color: var(--accent2); font-weight: 600; }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: .2s;
+  width: 100%;
+  margin-top: 8px;
+}
+.btn-primary:hover { background: #fb7185; }
+.btn-secondary {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: .2s;
+  width: 100%;
+}
+.btn-secondary:hover { border-color: var(--dim); }
+</style>
+</head>
+<body>
+
+<!-- ── MENU ── -->
+<div class="screen active" id="s-menu">
+  <div class="logo">
+    <div class="logo-ja">耳から覚える ＆ 過去問</div>
+    <div class="logo-en">MIMIKARA N3</div>
+    <div class="logo-sub">Gộp 120 từ / thẻ · Động từ thể Masu (ます形)</div>
+    <div class="total-badge" id="total-badge">Đang tải...</div>
+  </div>
+
+  <div class="section-label">Chọn thẻ học (120 từ / thẻ)</div>
+  <div class="group-grid" id="group-grid"></div>
+</div>
+
+<!-- ── MODE SELECT ── -->
+<div class="screen" id="s-mode">
+  <div class="mode-header">
+    <h2 id="mode-title"></h2>
+    <p id="mode-sub"></p>
+  </div>
+  <div class="mode-cards">
+    <div class="mode-card" onclick="startQuiz('kana')">
+      <div class="mode-icon">🈳</div>
+      <b>KANA MODE</b>
+      <p>Hiragana / Katakana → Nghĩa tiếng Việt. Luyện đọc và phản xạ nghĩa.</p>
+    </div>
+    <div class="mode-card" onclick="startQuiz('kanji')">
+      <div class="mode-icon">漢</div>
+      <b>KANJI MODE</b>
+      <p>Chữ Hán → Cách đọc + Nghĩa. Nắm vững mặt chữ Kanji N3.</p>
+    </div>
+    <div class="mode-card" onclick="startQuiz('meaning')">
+      <div class="mode-icon">🇻🇳</div>
+      <b>NGHĨA → KANA</b>
+      <p>Tiếng Việt → Chọn từ tiếng Nhật. Luyện nhớ từ vựng chiều ngược.</p>
+    </div>
+  </div>
+  <button class="btn-back" onclick="goTo('s-menu')">← Quay lại</button>
+</div>
+
+<!-- ── QUIZ ── -->
+<div class="screen" id="s-quiz">
+  <div class="quiz-header">
+    <button class="btn-back" style="margin-top:0; padding:6px 12px;" onclick="goTo('s-mode')">←</button>
+    <div class="q-badge" id="q-count">0 / 0</div>
+    <div class="q-score" id="q-score">✓ 0</div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="q-fill"></div></div>
+  <div class="q-card">
+    <div class="q-hint" id="q-hint"></div>
+    <div class="q-main" id="q-main">…</div>
+  </div>
+  <div class="options" id="q-opts"></div>
+</div>
+
+<!-- ── RESULT ── -->
+<div class="screen result-screen" id="s-result">
+  <div class="result-emoji" id="r-emoji">🎉</div>
+  <div class="result-title">Hoàn thành!</div>
+  <div class="result-score" id="r-score">0/0</div>
+  <div class="result-pct" id="r-pct">0%</div>
+  <div class="result-label" id="r-label"></div>
+  <button class="btn-primary" onclick="restartQuiz()">Làm lại phần này</button>
+  <button class="btn-secondary" onclick="goTo('s-menu')">Quay về menu</button>
+</div>
+
+<script>
+// ═════════════════════════════════════════════════════════════════
+// DỮ LIỆU TỪ VỰNG N3 (ĐỘNG TỪ ĐÃ CHUYỂN HOÀN TOÀN THỂ MASU)
+// ═════════════════════════════════════════════════════════════════
+const DB = [
+  { lesson: 1, topic: "Khối 1: Đời sống & Con người (1-60)", vocabulary: [
+    {word:"ごうかく", kanji:"合格", meaning:"Đỗ, trúng tuyển"},
+    {word:"ふごうかく", kanji:"不合格", meaning:"Trượt, không đỗ"},
+    {word:"しんがく", kanji:"進学", meaning:"Học lên cấp cao hơn"},
+    {word:"たいがく", kanji:"退学", meaning:"Thôi học, bỏ học"},
+    {word:"しゅうしょく", kanji:"就職", meaning:"Tìm việc, đi làm"},
+    {word:"たいしょく", kanji:"退職", meaning:"Nghỉ việc, từ chức"},
+    {word:"しつぎょう", kanji:"失業", meaning:"Thất nghiệp"},
+    {word:"ざんぎょう", kanji:"残業", meaning:"Làm thêm giờ"},
+    {word:"せいかつ", kanji:"生活", meaning:"Sinh hoạt, cuộc sống"},
+    {word:"つうきん", kanji:"通勤", meaning:"Đi làm hàng ngày"},
+    {word:"がくれき", kanji:"学歴", meaning:"Bằng cấp, trình độ học vấn"},
+    {word:"きゅうりょう", kanji:"給料", meaning:"Tiền lương"},
+    {word:"めんせつ", kanji:"面接", meaning:"Phỏng vấn"},
+    {word:"きゅうけい", kanji:"休憩", meaning:"Nghỉ giải lao"},
+    {word:"かんこう", kanji:"観光", meaning:"Tham quan, du lịch"},
+    {word:"きこく", kanji:"帰国", meaning:"Về nước"},
+    {word:"きせい", kanji:"帰省", meaning:"Về quê"},
+    {word:"きたく", kanji:"帰宅", meaning:"Về nhà"},
+    {word:"さんか", kanji:"参加", meaning:"Tham gia"},
+    {word:"しゅっせき", kanji:"出席", meaning:"Có mặt, tham dự"},
+    {word:"けっせき", kanji:"欠席", meaning:"Vắng mặt"},
+    {word:"ちこく", kanji:"遅刻", meaning:"Đến muộn, đi trễ"},
+    {word:"けしょう", kanji:"化粧", meaning:"Trang điểm"},
+    {word:"けいさん", kanji:"計算", meaning:"Tính toán"},
+    {word:"けいかく", kanji:"計画", meaning:"Kế hoạch"},
+    {word:"せいこう", kanji:"成功", meaning:"Thành công"},
+    {word:"しっぱい", kanji:"失敗", meaning:"Thất bại"},
+    {word:"じゅんび", kanji:"準備", meaning:"Chuẩn bị sẵn sàng"},
+    {word:"せいり", kanji:"整理", meaning:"Thu dọn, sắp xếp"},
+    {word:"ちゅうもん", kanji:"注文", meaning:"Đặt món, đặt hàng"},
+    {word:"ちょきん", kanji:"貯金", meaning:"Tiền tiết kiệm"},
+    {word:"てつや", kanji:"徹夜", meaning:"Thức trắng đêm"},
+    {word:"ひっこし", kanji:"引っ越し", meaning:"Chuyển nhà"},
+    {word:"しんちょう", kanji:"身長", meaning:"Chiều cao cơ thể"},
+    {word:"たいじゅう", kanji:"体重", meaning:"Cân nặng cơ thể"},
+    {word:"けが", kanji:"怪我", meaning:"Vết thương, chấn thương"},
+    {word:"かい", kanji:"会", meaning:"Bữa tiệc, cuộc họp mặt"},
+    {word:"しゅみ", kanji:"趣味", meaning:"Sở thích"},
+    {word:"きょうみ", kanji:"興味", meaning:"Hứng thú, quan tâm"},
+    {word:"おもいで", kanji:"思い出", meaning:"Kỷ niệm, ký ức"},
+    {word:"じょうだん", kanji:"冗談", meaning:"Chuyện đùa, nói đùa"},
+    {word:"もくてき", kanji:"目的", meaning:"Mục đích"},
+    {word:"やくそく", kanji:"約束", meaning:"Lời hứa, cuộc hẹn"},
+    {word:"おしゃべり", kanji:"", meaning:"Trò chuyện, tán gẫu"},
+    {word:"えんりょ", kanji:"遠慮", meaning:"Khách khí, ngại ngần"},
+    {word:"がまん", kanji:"我慢", meaning:"Chịu đựng, nhẫn nại"},
+    {word:"めいわく", kanji:"迷惑", meaning:"Phiền phức, làm phiền"},
+    {word:"きぼう", kanji:"希望", meaning:"Hy vọng, nguyện vọng"},
+    {word:"ゆめ", kanji:"夢", meaning:"Ước mơ, giấc mơ"},
+    {word:"さんせい", kanji:"賛成", meaning:"Tán thành, đồng ý"},
+    {word:"はんたい", kanji:"反対", meaning:"Phản đối, đối nghịch"},
+    {word:"そうぞう", kanji:"想像", meaning:"Tưởng tượng"},
+    {word:"どりょく", kanji:"努力", meaning:"Nỗ lực, cố gắng"},
+    {word:"たいよう", kanji:"太陽", meaning:"Mặt trời"},
+    {word:"ちきゅう", kanji:"地球", meaning:"Trái đất"},
+    {word:"おんど", kanji:"温度", meaning:"Nhiệt độ"},
+    {word:"しつど", kanji:"湿度", meaning:"Độ ẩm"},
+    {word:"しっけ", kanji:"湿気", meaning:"Hơi ẩm, ẩm ướt"},
+    {word:"つゆ", kanji:"梅雨", meaning:"Mùa mưa ở Nhật"},
+    {word:"かび", kanji:"", meaning:"Nấm mốc"}
+  ]},
+  { lesson: 2, topic: "Khối 2: Xã hội, Thiết bị & Quan hệ (61-120)", vocabulary: [
+    {word:"だんぼう", kanji:"暖房", meaning:"Lò sưởi, máy sưởi"},
+    {word:"れいぼう", kanji:"冷房", meaning:"Máy điều hòa mát"},
+    {word:"かわ", kanji:"皮", meaning:"Vỏ trái cây, da"},
+    {word:"かん", kanji:"缶", meaning:"Lon hộp kim loại"},
+    {word:"がめん", kanji:"画面", meaning:"Màn hình hiển thị"},
+    {word:"ばんぐみ", kanji:"番組", meaning:"Chương trình truyền hình"},
+    {word:"きじ", kanji:"記事", meaning:"Bài báo, tin tức"},
+    {word:"きんじょ", kanji:"近所", meaning:"Hàng xóm, khu lân cận"},
+    {word:"けいさつ", kanji:"警察", meaning:"Cảnh sát"},
+    {word:"じこ", kanji:"事故", meaning:"Tai nạn, sự cố"},
+    {word:"じけん", kanji:"事件", meaning:"Vụ án, sự vụ"},
+    {word:"こしょう", kanji:"故障", meaning:"Hỏng hóc máy móc"},
+    {word:"しゅうり", kanji:"修理", meaning:"Sửa chữa"},
+    {word:"ていでん", kanji:"停電", meaning:"Mất điện, cúp điện"},
+    {word:"ちょうし", kanji:"調子", meaning:"Tình trạng, phong độ"},
+    {word:"きんちょう", kanji:"緊張", meaning:"Căng thẳng, hồi hộp"},
+    {word:"じしん", kanji:"自信", meaning:"Tự tin"},
+    {word:"じまん", kanji:"自慢", meaning:"Tự mãn, khoe khoang"},
+    {word:"かんしゃ", kanji:"感謝", meaning:"Biết ơn, cảm tạ"},
+    {word:"あやまり", kanji:"謝り", meaning:"Lời xin lỗi"},
+    {word:"れい", kanji:"お礼", meaning:"Lời cảm ơn, quà cảm ơn"},
+    {word:"へんじ", kanji:"返事", meaning:"Hồi đáp, trả lời"},
+    {word:"ぼきん", kanji:"募金", meaning:"Quyên góp tiền"},
+    {word:"よきん", kanji:"預金", meaning:"Tiền gửi ngân hàng"},
+    {word:"りれきしょ", kanji:"履歴書", meaning:"Bản sơ yếu lý lịch"},
+    {word:"めんきょ", kanji:"免許", meaning:"Giấy phép, bằng lái"},
+    {word:"ぜいきん", kanji:"税金", meaning:"Thuế"},
+    {word:"ぶっか", kanji:"物価", meaning:"Giá cả thị trường"},
+    {word:"りょうきん", kanji:"料金", meaning:"Tiền phí, cước dịch vụ"},
+    {word:"せつやく", kanji:"節約", meaning:"Tiết kiệm chi tiêu"},
+    {word:"わりびき", kanji:"割引", meaning:"Giảm giá, chiết khấu"},
+    {word:"わりびきけん", kanji:"割引券", meaning:"Phiếu giảm giá"},
+    {word:"りょうしゅうしょ", kanji:"領収書", meaning:"Hóa đơn thanh toán"},
+    {word:"せいきゅうしょ", kanji:"請求書", meaning:"Phiếu yêu cầu thanh toán"},
+    {word:"わりこみ", kanji:"割り込み", meaning:"Chen hàng, chen ngang"},
+    {word:"つごう", kanji:"都合", meaning:"Hoàn cảnh, sự thuận tiện"},
+    {word:"にってい", kanji:"日程", meaning:"Lịch trình, kế hoạch ngày"},
+    {word:"しょうひきげん", kanji:"消費期限", meaning:"Hạn sử dụng"},
+    {word:"ゆうこうきげん", kanji:"有効期限", meaning:"Thời hạn hiệu lực"},
+    {word:"じゅんじょ", kanji:"順序", meaning:"Thứ tự, tuần tự"},
+    {word:"じゅんばん", kanji:"順番", meaning:"Thứ tự lượt"},
+    {word:"ほうほう", kanji:"方法", meaning:"Phương pháp, cách thức"},
+    {word:"しゅだん", kanji:"手段", meaning:"Biện pháp, thủ đoạn"},
+    {word:"げんいん", kanji:"原因", meaning:"Nguyên nhân"},
+    {word:"りゆう", kanji:"理由", meaning:"Lý do"},
+    {word:"けっか", kanji:"結果", meaning:"Kết quả"},
+    {word:"さいご", kanji:"最後", meaning:"Cuối cùng"},
+    {word:"さいしょ", kanji:"最初", meaning:"Đầu tiên"},
+    {word:"とちゅう", kanji:"途中", meaning:"Giữa chừng, trên đường"},
+    {word:"げんば", kanji:"現場", meaning:"Hiện trường làm việc, nhà xưởng"},
+    {word:"じょうきょう", kanji:"状況", meaning:"Tình trạng, hoàn cảnh"},
+    {word:"じょうたい", kanji:"状態", meaning:"Trạng thái"},
+    {word:"たいど", kanji:"態度", meaning:"Thái độ"},
+    {word:"いけん", kanji:"意見", meaning:"Ý kiến"},
+    {word:"かんそう", kanji:"感想", meaning:"Cảm tưởng"},
+    {word:"しじ", kanji:"指示", meaning:"Chỉ thị, hướng dẫn"},
+    {word:"めいれい", kanji:"命令", meaning:"Mệnh lệnh"},
+    {word:"きそく", kanji:"規則", meaning:"Quy tắc, nội quy"},
+    {word:"ほうりつ", kanji:"法律", meaning:"Pháp luật"},
+    {word:"きほん", kanji:"基本", meaning:"Cơ bản, nền tảng"}
+  ]},
+  { lesson: 3, topic: "Khối 3: Công việc & Doanh nghiệp (121-180)", vocabulary: [
+    {word:"しょるい", kanji:"書類", meaning:"Tài liệu, giấy tờ hồ sơ"},
+    {word:"しりょう", kanji:"資料", meaning:"Tài liệu, dữ liệu tham khảo"},
+    {word:"げんこう", kanji:"原稿", meaning:"Bản thảo"},
+    {word:"きじゅん", kanji:"基準", meaning:"Tiêu chuẩn, chuẩn mực"},
+    {word:"ひょうじゅん", kanji:"標準", meaning:"Tiêu chuẩn bình thường"},
+    {word:"きほんてき", kanji:"基本的", meaning:"Mang tính cơ bản"},
+    {word:"ないよう", kanji:"内容", meaning:"Nội dung"},
+    {word:"だいめい", kanji:"題名", meaning:"Tiêu đề, nhan đề"},
+    {word:"テーマ", kanji:"", meaning:"Chủ đề"},
+    {word:"もくひょう", kanji:"目標", meaning:"Mục tiêu phấn đấu"},
+    {word:"もくてき", kanji:"目的", meaning:"Mục đích"},
+    {word:"ほうしん", kanji:"方針", meaning:"Phương châm, định hướng"},
+    {word:"ぎょうむ", kanji:"業務", meaning:"Nghiệp vụ, công tác"},
+    {word:"さぎょう", kanji:"作業", meaning:"Tác nghiệp, thao tác làm việc"},
+    {word:"てじゅん", kanji:"手順", meaning:"Trình tự các bước thực hiện"},
+    {word:"てはい", kanji:"手配", meaning:"Thu xếp, sắp đặt chuẩn bị"},
+    {word:"たんとう", kanji:"担当", meaning:"Phụ trách, đảm trách"},
+    {word:"せきにん", kanji:"責任", meaning:"Trách nhiệm"},
+    {word:"やくわり", kanji:"役割", meaning:"Vai trò, nhiệm vụ"},
+    {word:"のうりょく", kanji:"能力", meaning:"Năng lực"},
+    {word:"じつりょく", kanji:"実力", meaning:"Thực lực"},
+    {word:"じっせき", kanji:"実績", meaning:"Thành tích thực tế đạt được"},
+    {word:"せいか", kanji:"成果", meaning:"Thành quả"},
+    {word:"こうか", kanji:"効果", meaning:"Hiệu quả"},
+    {word:"えいきょう", kanji:"影響", meaning:"Ảnh hưởng"},
+    {word:"たいさく", kanji:"対策", meaning:"Biện pháp đối sách"},
+    {word:"よぼう", kanji:"予防", meaning:"Đề phòng, phòng ngừa"},
+    {word:"あんぜん", kanji:"安全", meaning:"An toàn"},
+    {word:"きけん", kanji:"危険", meaning:"Nguy hiểm"},
+    {word:"ちゅうい", kanji:"注意", meaning:"Chú ý, lưu ý"},
+    {word:"ほんしゃ", kanji:"本社", meaning:"Trụ sở chính"},
+    {word:"してん", kanji:"支店", meaning:"Chi nhánh"},
+    {word:"こうじょう", kanji:"工場", meaning:"Nhà máy, công xưởng"},
+    {word:"ぶしょ", kanji:"部署", meaning:"Bộ phận, phòng ban"},
+    {word:"やくしょく", kanji:"役職", meaning:"Chức vụ trong công ty"},
+    {word:"じょうし", kanji:"上司", meaning:"Cấp trên"},
+    {word:"ぶか", kanji:"部下", meaning:"Cấp dưới"},
+    {word:"どうりょう", kanji:"同僚", meaning:"Đồng nghiệp"},
+    {word:"せんぱい", kanji:"先輩", meaning:"Tiền bối, người đi trước"},
+    {word:"こうはい", kanji:"後輩", meaning:"Hậu bối, người đi sau"},
+    {word:"とりひきさき", kanji:"取引先", meaning:"Đối tác kinh doanh"},
+    {word:"こきゃく", kanji:"顧客", meaning:"Khách hàng"},
+    {word:"しょうひしゃ", kanji:"消費者", meaning:"Người tiêu dùng"},
+    {word:"しゃちょう", kanji:"社長", meaning:"Giám đốc công ty"},
+    {word:"ぶちょう", kanji:"部長", meaning:"Trưởng phòng"},
+    {word:"かちょう", kanji:"課長", meaning:"Tổ trưởng, trưởng nhóm"},
+    {word:"かいぎ", kanji:"会議", meaning:"Cuộc họp"},
+    {word:"うちあわせ", kanji:"打ち合わせ", meaning:"Gặp gỡ bàn bạc công việc"},
+    {word:"ほうこく", kanji:"報告", meaning:"Báo cáo"},
+    {word:"れんらく", kanji:"連絡", meaning:"Liên lạc"},
+    {word:"そうだん", kanji:"相談", meaning:"Trao đổi, thảo luận"},
+    {word:"ていあん", kanji:"提案", meaning:"Đề xuất, kiến nghị"},
+    {word:"けいやく", kanji:"契約", meaning:"Hợp đồng giao kết"},
+    {word:"こうしょう", kanji:"交渉", meaning:"Đàm phán, thương lượng"},
+    {word:"じょうけん", kanji:"条件", meaning:"Điều kiện"},
+    {word:"きかん", kanji:"期間", meaning:"Thời hạn, khoảng thời gian"},
+    {word:"きげん", kanji:"期限", meaning:"Hạn chót, kỳ hạn"},
+    {word:"のうき", kanji:"納期", meaning:"Thời hạn giao hàng"},
+    {word:"しんせい", kanji:"申請", meaning:"Đăng ký, xin phép"},
+    {word:"きょか", kanji:"許可", meaning:"Sự cho phép, cấp phép"}
+  ]},
+  { lesson: 4, topic: "Khối 4: Kỹ thuật & Môi trường (181-240)", vocabulary: [
+    {word:"せいひん", kanji:"製品", meaning:"Sản phẩm hoàn chỉnh"},
+    {word:"しょうひん", kanji:"商品", meaning:"Hàng hóa buôn bán"},
+    {word:"ぶひん", kanji:"部品", meaning:"Linh kiện cấu thành"},
+    {word:"ざいりょう", kanji:"材料", meaning:"Vật liệu chế tạo"},
+    {word:"げんりょう", kanji:"原料", meaning:"Nguyên liệu thô"},
+    {word:"せつび", kanji:"設備", meaning:"Trang thiết bị máy móc"},
+    {word:"きかい", kanji:"機械", meaning:"Máy móc cơ khí"},
+    {word:"そうち", kanji:"装置", meaning:"Thiết bị, hệ thống máy"},
+    {word:"どうぐ", kanji:"道具", meaning:"Dụng cụ, công cụ đồ nghề"},
+    {word:"きのう", kanji:"機能", meaning:"Chức năng vận hành"},
+    {word:"せいのう", kanji:"性能", meaning:"Tính năng, hiệu năng máy"},
+    {word:"ひんしつ", kanji:"品質", meaning:"Chất lượng sản phẩm"},
+    {word:"せいぞう", kanji:"製造", meaning:"Chế tạo, sản xuất"},
+    {word:"せいさく", kanji:"制作", meaning:"Chế tác, làm ra tác phẩm"},
+    {word:"せっけい", kanji:"設計", meaning:"Thiết kế bản vẽ kỹ thuật"},
+    {word:"かいはつ", kanji:"開発", meaning:"Phát triển sản phẩm/phần mềm"},
+    {word:"けんさ", kanji:"検査", meaning:"Kiểm tra, xét nghiệm"},
+    {word:"てんけん", kanji:"点検", meaning:"Bảo dưỡng kiểm tra định kỳ"},
+    {word:"ほぜん", kanji:"保全", meaning:"Bảo trì, giữ gìn nguyên trạng"},
+    {word:"しゅうり", kanji:"修理", meaning:"Sửa chữa hỏng hóc"},
+    {word:"こうかん", kanji:"交換", meaning:"Thay thế linh kiện"},
+    {word:"かいぜん", kanji:"改善", meaning:"Kaizen cải tiến nâng cao"},
+    {word:"ちょうせい", kanji:"調整", meaning:"Điều chỉnh thông số"},
+    {word:"そくてい", kanji:"測定", meaning:"Đo đạc kích thước"},
+    {word:"ぶんせき", kanji:"分析", meaning:"Phân tích dữ liệu số liệu"},
+    {word:"じっけん", kanji:"実験", meaning:"Thí nghiệm"},
+    {word:"けんきゅう", kanji:"研究", meaning:"Nghiên cứu học thuật"},
+    {word:"ぎじゅつ", kanji:"技術", meaning:"Kỹ thuật, công nghệ"},
+    {word:"データ", kanji:"", meaning:"Dữ liệu"},
+    {word:"システム", kanji:"", meaning:"Hệ thống"},
+    {word:"しぜん", kanji:"自然", meaning:"Tự nhiên, thiên nhiên"},
+    {word:"かんきょう", kanji:"環境", meaning:"Môi trường sống/làm việc"},
+    {word:"こうがい", kanji:"公害", meaning:"Ô nhiễm môi trường"},
+    {word:"おせん", kanji:"汚染", meaning:"Sự ô nhiễm hóa chất"},
+    {word:"しょうえね", kanji:"省エネ", meaning:"Tiết kiệm năng lượng"},
+    {word:"さいりよう", kanji:"再利用", meaning:"Tái sử dụng"},
+    {word:"リサイクル", kanji:"", meaning:"Tái chế rác thải"},
+    {word:"はいき", kanji:"廃棄", meaning:"Vứt bỏ phế liệu, tiêu hủy"},
+    {word:"ごみ", kanji:"", meaning:"Rác thải"},
+    {word:"しげん", kanji:"資源", meaning:"Tài nguyên thiên nhiên"},
+    {word:"エネルギー", kanji:"", meaning:"Năng lượng"},
+    {word:"でんりょく", kanji:"電力", meaning:"Điện lực, công suất điện"},
+    {word:"ガス", kanji:"", meaning:"Khí đốt, ga"},
+    {word:"せきゆ", kanji:"石油", meaning:"Dầu mỏ, dầu hỏa"},
+    {word:"きこう", kanji:"気候", meaning:"Khí hậu thời tiết"},
+    {word:"おんだんか", kanji:"温暖化", meaning:"Hiện tượng nóng lên toàn cầu"},
+    {word:"じしん", kanji:"地震", meaning:"Động đất"},
+    {word:"たいふう", kanji:"台風", meaning:"Cơn bão lớn"},
+    {word:"こうずい", kanji:"洪水", meaning:"Lũ lụt"},
+    {word:"つなみ", kanji:"津波", meaning:"Sóng thần"},
+    {word:"ひがい", kanji:"被害", meaning:"Thiệt hại, tổn thất"},
+    {word:"さいがい", kanji:"災害", meaning:"Thảm họa, thiên tai"},
+    {word:"かさい", kanji:"火災", meaning:"Hỏa hoạn, cháy lớn"},
+    {word:"ひなん", kanji:"避難", meaning:"Lánh nạn, sơ tán"},
+    {word:"けいほう", kanji:"警報", meaning:"Cảnh báo khẩn cấp"},
+    {word:"ちいき", kanji:"地域", meaning:"Khu vực, vùng miền"},
+    {word:"ちほう", kanji:"地方", meaning:"Địa phương, vùng quê"},
+    {word:"とかい", kanji:"都会", meaning:"Đô thị, thành phố lớn"},
+    {word:"いなか", kanji:"田舎", meaning:"Vùng nông thôn"},
+    {word:"こくがい", kanji:"国外", meaning:"Ngoài nước, hải ngoại"}
+  ]},
+  { lesson: 5, topic: "Khối 5: Tự động từ N3 (Thể Masu 1-60)", vocabulary: [
+    {word:"たちます", kanji:"立ちます", meaning:"Đứng dậy, dựng đứng"},
+    {word:"すわります", kanji:"座ります", meaning:"Ngồi xuống"},
+    {word:"ならびます", kanji:"並びます", meaning:"Xếp hàng ngay ngắn"},
+    {word:"とおります", kanji:"通ります", meaning:"Đi qua, thông qua"},
+    {word:"うごきます", kanji:"動きます", meaning:"Hoạt động, cử động"},
+    {word:"とまります", kanji:"止まります", meaning:"Dừng lại, đứng yên"},
+    {word:"かわります", kanji:"変わります", meaning:"Thay đổi, biến đổi"},
+    {word:"へります", kanji:"減ります", meaning:"Giảm đi, hao bớt"},
+    {word:"ふえます", kanji:"増えます", meaning:"Tăng lên, sinh sôi"},
+    {word:"あつまります", kanji:"集まります", meaning:"Tụ họp, tập hợp lại"},
+    {word:"わかれます", kanji:"別れます", meaning:"Chia tay, ly biệt"},
+    {word:"おれます", kanji:"折れます", meaning:"Bị gãy (nhánh cây, xương)"},
+    {word:"こわれます", kanji:"壊れます", meaning:"Bị hỏng, vỡ tan"},
+    {word:"きれます", kanji:"切れます", meaning:"Bị đứt, hết hạn"},
+    {word:"やぶれます", kanji:"破れます", meaning:"Bị rách, thủng túi"},
+    {word:"よごれます", kanji:"汚れます", meaning:"Bị vấy bẩn, ố vàng"},
+    {word:"はずれます", kanji:"外れます", meaning:"Tuột ra, chệch hướng"},
+    {word:"こぼれます", kanji:"零れます", meaning:"Tràn ra ngoài, rơi đổ"},
+    {word:"のこります", kanji:"残ります", meaning:"Còn sót lại, ở lại"},
+    {word:"きえます", kanji:"消えます", meaning:"Biến mất, tắt lửa/đèn"},
+    {word:"あきます", kanji:"開きます", meaning:"Mở ra (cửa tự mở)"},
+    {word:"しまります", kanji:"閉まります", meaning:"Đóng lại (cửa tự đóng)"},
+    {word:"つきます", kanji:"付きます", meaning:"Dính kèm, đính kèm"},
+    {word:"きまります", kanji:"決まります", meaning:"Được ấn định, quyết xong"},
+    {word:"なおります", kanji:"直ります/治ります", meaning:"Được sửa / Khỏi bệnh"},
+    {word:"みつかります", kanji:"見つかります", meaning:"Được tìm thấy"},
+    {word:"たすかります", kanji:"助かります", meaning:"Được cứu vớt, may mắn"},
+    {word:"つづきます", kanji:"続きます", meaning:"Tiếp diễn, kéo dài"},
+    {word:"おちます", kanji:"落ちます", meaning:"Rơi rớt, thi trượt"},
+    {word:"おきます", kanji:"起きます", meaning:"Thức dậy / Xảy ra sự việc"},
+    {word:"あがります", kanji:"上がります", meaning:"Tăng lên, đi lên"},
+    {word:"さがります", kanji:"下がります", meaning:"Giảm xuống, lùi lại"},
+    {word:"とどきます", kanji:"届きます", meaning:"Được chuyển tới tận nơi"},
+    {word:"そだちます", kanji:"育ちます", meaning:"Lớn lên, phát triển"},
+    {word:"まよいます", kanji:"迷います", meaning:"Lạc đường, phân vân"},
+    {word:"まにあいます", kanji:"間に合います", meaning:"Kịp giờ, kịp thời hạn"},
+    {word:"おくれます", kanji:"遅れます", meaning:"Chậm trễ, muộn giờ"},
+    {word:"すきます", kanji:"空きます", meaning:"Vắng vẻ, đói bụng"},
+    {word:"こみます", kanji:"混みます", meaning:"Đông đúc xe cộ"},
+    {word:"にあいます", kanji:"似合います", meaning:"Vừa vặn, rất hợp"},
+    {word:"にます", kanji:"似ます", meaning:"Giống (diện mạo)"},
+    {word:"あわてます", kanji:"慌てます", meaning:"Hốt hoảng, cuống cuồng"},
+    {word:"おどろきます", kanji:"驚きます", meaning:"Ngạc nhiên, giật mình"},
+    {word:"よろこびます", kanji:"喜びます", meaning:"Vui mừng, sung sướng"},
+    {word:"かなしみます", kanji:"悲しみます", meaning:"Đau buồn, xót xa"},
+    {word:"おこります", kanji:"怒ります", meaning:"Nổi giận, cáu kỉnh"},
+    {word:"きづきます", kanji:"気づきます", meaning:"Nhận ra, để ý thấy"},
+    {word:"であいます", kanji:"出会います", meaning:"Tình cờ hội ngộ, gặp mặt"},
+    {word:"みかけます", kanji:"見かけます", meaning:"Tình cờ nhìn thấy"},
+    {word:"つまずきます", kanji:"躓きます", meaning:"Vấp ngã sảy chân"},
+    {word:"うなずきます", kanji:"頷きます", meaning:"Gật đầu đồng tình"},
+    {word:"すれちがいます", kanji:"すれ違います", meaning:"Đi lướt qua nhau"},
+    {word:"おいつきます", kanji:"追いつきます", meaning:"Đuổi kịp theo sau"},
+    {word:"おいこします", kanji:"追い越します", meaning:"Vượt lên trước mặt"},
+    {word:"かよいます", kanji:"通います", meaning:"Đi lại thường xuyên (đi làm)"},
+    {word:"もどります", kanji:"戻ります", meaning:"Quay trở lại vị trí cũ"},
+    {word:"ひびきます", kanji:"響きます", meaning:"Vang vọng, chấn động"},
+    {word:"かがやきます", kanji:"輝きます", meaning:"Tỏa sáng lấp lánh"},
+    {word:"くずれます", kanji:"崩れます", meaning:"Sụp đổ, sạt lở đất"},
+    {word:"あふれます", kanji:"溢れます", meaning:"Tràn ngập, ngập tràn"}
+  ]},
+  { lesson: 6, topic: "Khối 6: Tha động từ N3 (Thể Masu 1-60)", vocabulary: [
+    {word:"たてます", kanji:"建てます/立てます", meaning:"Dựng lên, lập kế hoạch"},
+    {word:"ならべます", kanji:"並べます", meaning:"Bày biện, sắp xếp"},
+    {word:"とおします", kanji:"通します", meaning:"Cho qua, xâu chuỗi"},
+    {word:"うごかします", kanji:"動かします", meaning:"Di chuyển, vận hành máy"},
+    {word:"とめます", kanji:"止めます", meaning:"Dừng lại, đỗ xe"},
+    {word:"かえます", kanji:"変えます", meaning:"Thay đổi, đổi mới"},
+    {word:"へらします", kanji:"減らします", meaning:"Cắt giảm, làm hao bớt"},
+    {word:"ふやします", kanji:"増やします", meaning:"Gia tăng, nhân thêm"},
+    {word:"あつめます", kanji:"集めます", meaning:"Thu thập, gom góp"},
+    {word:"わけます", kanji:"分けます", meaning:"Phân chia, phân loại"},
+    {word:"おります", kanji:"折ります", meaning:"Bẻ gãy, gập giấy"},
+    {word:"こわします", kanji:"壊します", meaning:"Phá vỡ, làm hỏng"},
+    {word:"きります", kanji:"切ります", meaning:"Cắt, tắt máy"},
+    {word:"やぶります", kanji:"破ります", meaning:"Xé rách, thất hứa"},
+    {word:"よごします", kanji:"汚します", meaning:"Làm vấy bẩn"},
+    {word:"はずします", kanji:"外します", meaning:"Tháo bỏ, rời vị trí"},
+    {word:"こぼします", kanji:"零します", meaning:"Làm đổ, tràn nước"},
+    {word:"のこします", kanji:"残します", meaning:"Để thừa lại"},
+    {word:"けします", kanji:"消します", meaning:"Tắt đèn, xóa bỏ"},
+    {word:"あけます", kanji:"開けます", meaning:"Mở cửa ra"},
+    {word:"しめます", kanji:"閉めます", meaning:"Khép chặt cửa"},
+    {word:"つけます", kanji:"付けます", meaning:"Bật công tắc, dán lên"},
+    {word:"きめます", kanji:"決めます", meaning:"Quyết định điều gì"},
+    {word:"なおします", kanji:"直します/治します", meaning:"Sửa chữa / Chữa trị"},
+    {word:"みつけます", kanji:"見つけます", meaning:"Tìm ra, nhận ra"},
+    {word:"たすけます", kanji:"助けます", meaning:"Cứu vớt, hỗ trợ"},
+    {word:"つづけます", kanji:"続けます", meaning:"Tiếp tục duy trì"},
+    {word:"おとします", kanji:"落とします", meaning:"Làm rơi, đánh rớt"},
+    {word:"おこします", kanji:"起こします", meaning:"Đánh thức / Gây tai nạn"},
+    {word:"うみます", kanji:"生みます/産みます", meaning:"Sinh đẻ / Sản sinh ra"},
+    {word:"むかえます", kanji:"迎えます", meaning:"Nghênh đón, chào đón"},
+    {word:"みおくります", kanji:"見送ります", meaning:"Tiễn biệt, đưa tiễn"},
+    {word:"たずねます", kanji:"訪ねます", meaning:"Ghé thăm nhà ai"},
+    {word:"さそいます", kanji:"誘います", meaning:"Rủ rê, lôi kéo"},
+    {word:"ことわります", kanji:"断ります", meaning:"Từ chối, khước từ"},
+    {word:"あずけます", kanji:"預けます", meaning:"Ký gửi tiền bạc/hành lý"},
+    {word:"あずかります", kanji:"預かります", meaning:"Cất giữ hộ, trông nom"},
+    {word:"つかまえます", kanji:"捕まえます", meaning:"Bắt giữ tội phạm"},
+    {word:"のせます", kanji:"載せます", meaning:"Đăng tin, chất tải lên xe"},
+    {word:"わたします", kanji:"渡します", meaning:"Giao tận tay, trao qua"},
+    {word:"すごします", kanji:"過ごします", meaning:"Dành trọn thời gian"},
+    {word:"ためします", kanji:"試します", meaning:"Thử nghiệm, làm thử"},
+    {word:"たしかめます", kanji:"確かめます", meaning:"Kiểm tra, xác nhận lại"},
+    {word:"ふせぎます", kanji:"防ぎます", meaning:"Ngăn chặn, phòng ngừa"},
+    {word:"かかえます", kanji:"抱えます", meaning:"Ôm đồm, gánh vác món nợ"},
+    {word:"たのみます", kanji:"頼みます", meaning:"Nhờ vả, đặt món"},
+    {word:"あやまります", kanji:"謝ります", meaning:"Xin lỗi, tạ tội"},
+    {word:"ゆるします", kanji:"許します", meaning:"Tha thứ, cho phép"},
+    {word:"うたがいます", kanji:"疑います", meaning:"Nghi ngờ, ngờ vực"},
+    {word:"しんじます", kanji:"信じます", meaning:"Tin tưởng"},
+    {word:"ほめます", kanji:"褒めます", meaning:"Khen ngợi, tán thưởng"},
+    {word:"しかります", kanji:"叱ります", meaning:"Quát mắng, la rầy"},
+    {word:"なぐさめます", kanji:"慰めます", meaning:"An ủi, động viên"},
+    {word:"おもいだします", kanji:"思い出す", meaning:"Nhớ ra, hồi tưởng"},
+    {word:"おもいつきます", kanji:"思いつきます", meaning:"Nảy ra ý kiến ý tưởng"},
+    {word:"くらべます", kanji:"比べます", meaning:"So sánh, đối chiếu"},
+    {word:"しらべます", kanji:"調べます", meaning:"Điều tra, tra cứu"},
+    {word:"かさねます", kanji:"重ねます", meaning:"Chồng chất, lặp đi lặp lại"},
+    {word:"あきらめます", kanji:"諦めます", meaning:"Từ bỏ, đầu hàng"},
+    {word:"うけとります", kanji:"受け取ります", meaning:"Tiếp nhận tận tay"}
+  ]},
+  { lesson: 7, topic: "Khối 7: Tính từ, Phó từ & Đề thi N3 (1-60)", vocabulary: [
+    {word:"うまい", kanji:"巧い/旨い", meaning:"Khéo tay / Thơm ngon"},
+    {word:"まずい", kanji:"", meaning:"Dở tệ, vị tệ"},
+    {word:"おかしい", kanji:"", meaning:"Kỳ quặc, buồn cười"},
+    {word:"くだらない", kanji:"", meaning:"Tầm phào, vô vị"},
+    {word:"すばらしい", kanji:"素晴らしい", meaning:"Tuyệt vời, tráng lệ"},
+    {word:"すごい", kanji:"凄い", meaning:"Ghê gớm, cừ khôi"},
+    {word:"したしい", kanji:"親しい", meaning:"Thân thiết, gần gũi"},
+    {word:"くわしい", kanji:"詳しい", meaning:"Tường tận, chi tiết"},
+    {word:"こまかい", kanji:"細かい", meaning:"Li ti / Tiền lẻ / Chi tiết"},
+    {word:"あさい", kanji:"浅い", meaning:"Nông cạn, cạn nước"},
+    {word:"ふかい", kanji:"深い", meaning:"Sâu sắc, sâu thẳm"},
+    {word:"かたい", kanji:"固い/硬い", meaning:"Cứng rắn, vững vàng"},
+    {word:"やわらかい", kanji:"柔らかい", meaning:"Mềm mại, dẻo dai"},
+    {word:"ぬるい", kanji:"温い", meaning:"Nguội ngắt, âm ấm"},
+    {word:"まぶしい", kanji:"眩しい", meaning:"Chói mắt, lóa sáng"},
+    {word:"むなしい", kanji:"空しい", meaning:"Trống rỗng, hoài công"},
+    {word:"くやしい", kanji:"悔しい", meaning:"Tiếc nuối, cay cú dằn vặt"},
+    {word:"うらやましい", kanji:"羨ましい", meaning:"Ghen tị, thèm muốn"},
+    {word:"なつかしい", kanji:"懐かしい", meaning:"Nhớ nhung hoài niệm xưa"},
+    {word:"おとなしい", kanji:"大人しい", meaning:"Hiền hòa, ít nói"},
+    {word:"しんけんな", kanji:"真剣な", meaning:"Nghiêm chỉnh, nghiêm túc"},
+    {word:"しょうじきな", kanji:"正直な", meaning:"Chính trực, bộc trực"},
+    {word:"すなおな", kanji:"素直な", meaning:"Ngoan ngoãn, dễ bảo"},
+    {word:"ゆたかな", kanji:"豊かな", meaning:"Giàu có, dồi dào"},
+    {word:"みごとな", kanji:"見事な", meaning:"Xuất sắc, tuyệt hảo"},
+    {word:"べんりな", kanji:"便利な", meaning:"Tiện lợi"},
+    {word:"らくな", kanji:"楽な", meaning:"Nhàn hạ, thoải mái"},
+    {word:"ふくざつな", kanji:"複雑な", meaning:"Phức tạp, rắc rối"},
+    {word:"かんたんな", kanji:"簡単な", meaning:"Đơn giản"},
+    {word:"じゃまな", kanji:"邪魔な", meaning:"Vướng víu, cản trở"},
+    {word:"かなり", kanji:"", meaning:"Khá là, tương đối"},
+    {word:"ずいぶん", kanji:"随分", meaning:"Rất nhiều, cực kỳ"},
+    {word:"けっこう", kanji:"結構", meaning:"Khá tốt, tươm tất"},
+    {word:"だいぶん", kanji:"大部分", meaning:"Phần lớn, hầu như"},
+    {word:"もっと", kanji:"", meaning:"Hơn nữa, thêm chút"},
+    {word:"しっかり", kanji:"", meaning:"Chắc chắn, vững vàng"},
+    {word:"すっきり", kanji:"", meaning:"Khoan khoái, gọn gàng"},
+    {word:"さっぱり", kanji:"", meaning:"Nhẹ nhõm / Hoàn toàn không"},
+    {word:"ぴったり", kanji:"", meaning:"Vừa khít, chuẩn xác"},
+    {word:"のんびり", kanji:"", meaning:"Thong thả, thư thả"},
+    {word:"ぐっすり", kanji:"", meaning:"Ngủ sâu say giấc"},
+    {word:"めっきり", kanji:"", meaning:"Rõ rệt, trông thấy rõ"},
+    {word:"はっきり", kanji:"", meaning:"Rõ ràng, dứt khoát"},
+    {word:"ばったり", kanji:"", meaning:"Đột ngột ngã / Tình cờ đụng"},
+    {word:"こっそり", kanji:"", meaning:"Lén lút, vụng trộm"},
+    {word:"あっさり", kanji:"", meaning:"Vị thanh đạm / Dễ dàng"},
+    {word:"うっかり", kanji:"", meaning:"Lơ đễnh, vô ý quên"},
+    {word:"がっかり", kanji:"", meaning:"Thất vọng chán nản"},
+    {word:"ぎっしり", kanji:"", meaning:"Lèn chặt, chật ních"},
+    {word:"ちらっと", kanji:"", meaning:"Nhìn thoáng qua"},
+    {word:"ほっと", kanji:"", meaning:"Thở phào nhẹ nhõm"},
+    {word:"じっと", kanji:"", meaning:"Chăm chú, nín nhịn"},
+    {word:"そっと", kanji:"", meaning:"Rón rén, nhẹ nhàng"},
+    {word:"せっかく", kanji:"折角", meaning:"Cất công, bõ công"},
+    {word:"わざわざ", kanji:"", meaning:"Cố tình, cất công đi"},
+    {word:"まさか", kanji:"", meaning:"Chẳng lẽ nào, không ngờ"},
+    {word:"どうせ", kanji:"", meaning:"Đằng nào thì, dù sao"},
+    {word:"まるで", kanji:"", meaning:"Hệt như là, giống như"},
+    {word:"たとえ", kanji:"", meaning:"Dù cho là, giả sử"},
+    {word:"もしかすると", kanji:"", meaning:"Có lẽ là, biết đâu"}
+  ]},
+  { lesson: 8, topic: "Khối 8: Đề thi N3 các năm & Cụm từ chuyên sâu (1-60)", vocabulary: [
+    {word:"しじ", kanji:"指示", meaning:"Chỉ thị, hướng dẫn việc"},
+    {word:"さぎょう", kanji:"作業", meaning:"Tác nghiệp, thao tác máy"},
+    {word:"てんけん", kanji:"点検", meaning:"Kiểm tra bảo dưỡng định kỳ"},
+    {word:"たいおう", kanji:"対応", meaning:"Đối ứng, xử lý tình huống"},
+    {word:"ほうこく", kanji:"報告", meaning:"Báo cáo tình hình"},
+    {word:"れんらく", kanji:"連絡", meaning:"Liên lạc thông tin"},
+    {word:"そうだん", kanji:"相談", meaning:"Trao đổi, bàn bạc"},
+    {word:"ていしゅつ", kanji:"提出", meaning:"Nộp tài liệu, báo cáo"},
+    {word:"しょるい", kanji:"書類", meaning:"Hồ sơ, giấy tờ"},
+    {word:"さくせい", kanji:"作成", meaning:"Soạn thảo, lập tạo ra"},
+    {word:"かくにん", kanji:"確認", meaning:"Xác nhận, kiểm tra lại"},
+    {word:"かんり", kanji:"管理", meaning:"Quản lý, điều hành"},
+    {word:"たんとう", kanji:"担当", meaning:"Đảm trách, phụ trách"},
+    {word:"せきにん", kanji:"責任", meaning:"Trách nhiệm"},
+    {word:"ぎょうむ", kanji:"業務", meaning:"Nghiệp vụ, công việc"},
+    {word:"かいぎ", kanji:"会議", meaning:"Cuộc họp công ty"},
+    {word:"しりょう", kanji:"資料", meaning:"Tài liệu, dữ liệu"},
+    {word:"せつめい", kanji:"説明", meaning:"Giải thích tường tận"},
+    {word:"はっぴょう", kanji:"発表", meaning:"Phát biểu, công bố"},
+    {word:"てはい", kanji:"手配", meaning:"Chuẩn bị sắp xếp, thu xếp"},
+    {word:"つごう", kanji:"都合", meaning:"Thuận tiện điều kiện giờ giấc"},
+    {word:"えんき", kanji:"延期", meaning:"Hoãn lại thời hạn"},
+    {word:"ちゅうし", kanji:"中止", meaning:"Hủy bỏ giữa chừng"},
+    {word:"へんこう", kanji:"変更", meaning:"Thay đổi chỉnh sửa"},
+    {word:"じょうきょう", kanji:"状況", meaning:"Tình trạng, hoàn cảnh"},
+    {word:"じっし", kanji:"実施", meaning:"Thực thi, tiến hành"},
+    {word:"ほうしん", kanji:"方針", meaning:"Phương châm, định hướng"},
+    {word:"もくひょう", kanji:"目標", meaning:"Mục tiêu phấn đấu"},
+    {word:"けっか", kanji:"結果", meaning:"Kết quả thu được"},
+    {word:"げんいん", kanji:"原因", meaning:"Nguyên nhân cốt lõi"},
+    {word:"だんねんします", kanji:"断念します", meaning:"Từ bỏ ý định (bằng あきらめます)"},
+    {word:"ただちに", kanji:"直ちに", meaning:"Ngay lập tức (bằng すぐに)"},
+    {word:"およそ", kanji:"凡そ", meaning:"Khoảng chừng (bằng 約・だいたい)"},
+    {word:"めったに", kanji:"滅多に", meaning:"Hiếm khi xảy ra (~ない)"},
+    {word:"しだいに", kanji:"次第に", meaning:"Dần dần từng bước (bằng だんだん)"},
+    {word:"じょじょに", kanji:"徐々に", meaning:"Từ từ chầm chậm"},
+    {word:"たちまち", kanji:"忽ち", meaning:"Thoắt cái, trong chốc lát"},
+    {word:"つねに", kanji:"常に", meaning:"Luôn luôn (bằng いつも)"},
+    {word:"いっきに", kanji:"一気に", meaning:"Một mạch không nghỉ"},
+    {word:"すでに", kanji:"既に", meaning:"Đã rồi (bằng もう)"},
+    {word:"ようするに", kanji:"要するに", meaning:"Tóm lại là, ngắn gọn là"},
+    {word:"すくなくとも", kanji:"少なくとも", meaning:"Chí ít, tối thiểu là"},
+    {word:"せめて", kanji:"", meaning:"Ít nhất thì, giá mà được"},
+    {word:"さいわい", kanji:"幸い", meaning:"May mắn thay"},
+    {word:"とっくに", kanji:"", meaning:"Từ lâu lắm rồi"},
+    {word:"あいかわらず", kanji:"相変わらず", meaning:"Vẫn như mọi khi không đổi"},
+    {word:"それぞれ", kanji:"各々", meaning:"Mỗi một người, từng cá nhân"},
+    {word:"ばらばら", kanji:"", meaning:"Rời rạc lộn xộn"},
+    {word:"ぼろぼろ", kanji:"", meaning:"Rách nát te tua tơi tả"},
+    {word:"うろうろ", kanji:"", meaning:"Đi quanh quẩn lảng vảng"},
+    {word:"むせきにん", kanji:"無責任", meaning:"Vô trách nhiệm"},
+    {word:"むかんしん", kanji:"無関心", meaning:"Vô tâm, thờ ơ không màng"},
+    {word:"むりょう", kanji:"無料", meaning:"Miễn phí, không tính tiền"},
+    {word:"ふかのう", kanji:"不可能", meaning:"Bất khả thi, không thể"},
+    {word:"ふあん", kanji:"不安", meaning:"Bất an lo lắng"},
+    {word:"ふそく", kanji:"不足", meaning:"Thiếu hụt số lượng"},
+    {word:"こうかてき", kanji:"効果的", meaning:"Mang tính hiệu quả cao"},
+    {word:"ぐたいてき", kanji:"具体的", meaning:"Cụ thể rõ ràng tường minh"},
+    {word:"せっきょくてき", kanji:"積極的", meaning:"Tích cực chủ động"},
+    {word:"しょうきょくてき", kanji:"消極的", meaning:"Tiêu cực thụ động rụt rè"}
+  ]},
+// ── THẺ 5: ĐỘNG TỪ TƯ DUY & GIAO TIẾP (MASU) (120 TỪ) ──
+  { lesson: 9, topic: "Động từ tâm lý, tư duy & cảm xúc (Masu 1-60)", vocabulary: [
+    {word:"かんがえます", kanji:"考えます", meaning:"Suy nghĩ, cân nhắc"},
+    {word:"おもいます", kanji:"思います", meaning:"Nghĩ rằng, cảm thấy"},
+    {word:"おもいだします", kanji:"思い出す", meaning:"Nhớ lại, hồi tưởng"},
+    {word:"おもいつきます", kanji:"思いつきます", meaning:"Nghĩ ra, nảy ra ý tưởng"},
+    {word:"しんじます", kanji:"信じます", meaning:"Tin tưởng"},
+    {word:"うたがいます", kanji:"疑います", meaning:"Nghi ngờ, ngờ vực"},
+    {word:"のぞみます", kanji:"望みます", meaning:"Kỳ vọng, mong muốn"},
+    {word:"いのります", kanji:"祈ります", meaning:"Cầu nguyện, chúc phúc"},
+    {word:"ねがいます", kanji:"願います", meaning:"Cầu mong, nhờ vả"},
+    {word:"かんじます", kanji:"感じます", meaning:"Cảm nhận, thấy rằng"},
+    {word:"きづきます", kanji:"気づきます", meaning:"Nhận ra, để ý thấy"},
+    {word:"みとめます", kanji:"認めます", meaning:"Thừa nhận, công nhận"},
+    {word:"ゆるします", kanji:"許します", meaning:"Tha thứ, cho phép"},
+    {word:"あきらめます", kanji:"諦めます", meaning:"Từ bỏ, bỏ cuộc"},
+    {word:"なやみます", kanji:"悩みます", meaning:"Phiền muộn, trăn trở"},
+    {word:"まよいます", kanji:"迷います", meaning:"Phân vân, lạc lối"},
+    {word:"おどろきます", kanji:"驚きます", meaning:"Kinh ngạc, giật mình"},
+    {word:"あわてます", kanji:"慌てます", meaning:"Hốt hoảng, luống cuống"},
+    {word:"おこります", kanji:"怒ります", meaning:"Tức giận, nổi cáu"},
+    {word:"よろこびます", kanji:"喜びます", meaning:"Vui mừng, sung sướng"},
+    {word:"たのしみます", kanji:"楽しみます", meaning:"Tận hưởng, thưởng thức"},
+    {word:"かなしみます", kanji:"悲しみます", meaning:"Đau buồn, bi thương"},
+    {word:"くるしみます", kanji:"苦しみます", meaning:"Khổ sở, đau đớn"},
+    {word:"こまります", kanji:"困ります", meaning:"Khó khăn, bối rối"},
+    {word:"ためらいます", kanji:"躊躇います", meaning:"Do dự, ngập ngừng"},
+    {word:"おそれます", kanji:"恐れます", meaning:"Sợ hãi, e ngại"},
+    {word:"あこがれます", kanji:"憧れます", meaning:"Ngưỡng mộ, mơ ước"},
+    {word:"うらやみます", kanji:"羨みます", meaning:"Ghen tị, thèm muốn"},
+    {word:"にくみます", kanji:"憎みます", meaning:"Căm ghét, ghê tởm"},
+    {word:"あいします", kanji:"愛します", meaning:"Yêu thương"},
+    {word:"このみます", kanji:"好みます", meaning:"Ưa chuộng, thích"},
+    {word:"きらいます", kanji:"嫌います", meaning:"Ghét bỏ"},
+    {word:"あきれます", kanji:"呆れます", meaning:"Ngán ngẩm, cạn lời"},
+    {word:"あせります", kanji:"焦ります", meaning:"Nóng vội, sốt ruột"},
+    {word:"いばります", kanji:"威張ります", meaning:"Kiêu ngạo, hợm hĩnh"},
+    {word:"おごります", kanji:"奢ります", meaning:"Khao, đãi ăn"},
+    {word:"かつぎます", kanji:"担ぎます", meaning:"Khiêng, khiêu khích / mê tín"},
+    {word:"からかいます", kanji:"", meaning:"Trêu chọc, chọc ghẹo"},
+    {word:"くやみます", kanji:"悔やみます", meaning:"Hối hận, tiếc nuối"},
+    {word:"さからいます", kanji:"逆らいます", meaning:"Chống đối, ngược lại"},
+    {word:"したいます", kanji:"慕います", meaning:"Hâm mộ, tôn kính"},
+    {word:"ため息をつきます", kanji:"ため息を吐きます", meaning:"Thở dài"},
+    {word:"ちかいます", kanji:"誓います", meaning:"Thề thốt, thề nguyện"},
+    {word:"なぐさめます", kanji:"慰めます", meaning:"An ủi, động viên"},
+    {word:"なれます", kanji:"慣れます", meaning:"Quen thuộc với"},
+    {word:"ねたみます", kanji:"妬みます", meaning:"Ghen ghét, đố kỵ"},
+    {word:"はげまします", kanji:"励まします", meaning:"Khích lệ, cổ vũ"},
+    {word:"ふざけます", kanji:"", meaning:"Đùa giỡn, bỡn cợt"},
+    {word:"まごつきます", kanji:"", meaning:"Bối rối, lúng túng"},
+    {word:"みおろします", kanji:"見下ろします", meaning:"Nhìn xuống / Coi thường"},
+    {word:"みあげます", kanji:"見上げます", meaning:"Ngước nhìn lên / Kính trọng"},
+    {word:"みつめます", kanji:"見つめます", meaning:"Nhìn chằm chằm"},
+    {word:"もてなします", kanji:"持て成します", meaning:"Chiêu đãi, tiếp đón chu đáo"},
+    {word:"ゆずります", kanji:"譲ります", meaning:"Nhường nhịn, bàn giao"},
+    {word:"わびます", kanji:"詫びます", meaning:"Tạ lỗi, xin tha thứ"},
+    {word:"いのちをかけます", kanji:"命を懸けます", meaning:"Đánh cược cả tính mạng"},
+    {word:"きをくばります", kanji:"気を配ります", meaning:"Để ý, quan tâm chu đáo"},
+    {word:"きをひきます", kanji:"気を引きます", meaning:"Thu hút sự chú ý"},
+    {word:"みみをかたむけます", kanji:"耳を傾けます", meaning:"Lắng nghe chăm chú"},
+    {word:"めをつぶります", kanji:"目をつぶります", meaning:"Nhắm mắt làm ngơ"}
+  ]},
+  { lesson: 10, topic: "Động từ giao tiếp & Quan hệ xã hội (Masu 61-120)", vocabulary: [
+    {word:"つたえます", kanji:"伝えます", meaning:"Truyền đạt, nhắn lại"},
+    {word:"はなします", kanji:"話します", meaning:"Nói chuyện, kể lại"},
+    {word:"かたります", kanji:"語ります", meaning:"Tâm sự, kể chuyện"},
+    {word:"しらせます", kanji:"知らせます", meaning:"Thông báo, báo tin"},
+    {word:"おしえます", kanji:"教えます", meaning:"Dạy bảo, chỉ dẫn"},
+    {word:"たずねます", kanji:"尋ねます", meaning:"Hỏi han, dò hỏi"},
+    {word:"といあわせます", kanji:"問い合わせます", meaning:"Hỏi thăm thông tin, liên hệ hỏi"},
+    {word:"こたえます", kanji:"答えます", meaning:"Trả lời, đáp lại"},
+    {word:"ことわります", kanji:"断ります", meaning:"Từ chối, khước từ"},
+    {word:"さそいます", kanji:"誘います", meaning:"Rủ rê, mời mọc"},
+    {word:"まねきます", kanji:"招きます", meaning:"Mời đến, dẫn tới nguy cơ"},
+    {word:"むかえます", kanji:"迎えます", meaning:"Đón tiếp, nghênh đón"},
+    {word:"みおくります", kanji:"見送ります", meaning:"Đưa tiễn, hoãn lại"},
+    {word:"あずけます", kanji:"預けます", meaning:"Gửi gắm, ký gửi"},
+    {word:"あずかります", kanji:"預かります", meaning:"Trông nom, giữ hộ"},
+    {word:"たのみます", kanji:"頼みます", meaning:"Nhờ vả, đặt hàng"},
+    {word:"うけます", kanji:"受けます", meaning:"Nhận lấy, dự thi"},
+    {word:"うけとります", kanji:"受け取ります", meaning:"Tiếp nhận tận tay"},
+    {word:"わたします", kanji:"渡します", meaning:"Trao cho, giao lại"},
+    {word:"わたります", kanji:"渡ります", meaning:"Băng qua (đường, cầu)"},
+    {word:"あつめます", kanji:"集めます", meaning:"Gom góp, thu thập"},
+    {word:"あつまります", kanji:"集まります", meaning:"Tụ họp, tập hợp lại"},
+    {word:"わけます", kanji:"分けます", meaning:"Phân chia, tách ra"},
+    {word:"わかれます", kanji:"別れます", meaning:"Chia tay, ly biệt"},
+    {word:"であいます", kanji:"出会います", meaning:"Gặp gỡ tình cờ"},
+    {word:"みかけます", kanji:"見かけます", meaning:"Tình cờ thấy"},
+    {word:"あやまります", kanji:"謝ります", meaning:"Xin lỗi, tạ tội"},
+    {word:"ほめます", kanji:"褒めます", meaning:"Khen ngợi, tán dương"},
+    {word:"しかります", kanji:"叱ります", meaning:"Quát mắng, la rầy"},
+    {word:"なぐさめます", kanji:"慰めます", meaning:"An ủi, động viên"},
+    {word:"からかいます", kanji:"", meaning:"Trêu ghẹo"},
+    {word:"いじめます", kanji:"", meaning:"Bắt nạt, trù dập"},
+    {word:"たすけます", kanji:"助けます", meaning:"Cứu giúp, hỗ trợ"},
+    {word:"たすかります", kanji:"助かります", meaning:"Được cứu, may mắn"},
+    {word:"ささえます", kanji:"支えます", meaning:"Chống đỡ, tương trợ"},
+    {word:"したがいます", kanji:"従います", meaning:"Tuân theo, nghe lời"},
+    {word:"あらそいます", kanji:"争います", meaning:"Tranh cãi, cạnh tranh"},
+    {word:"たたかいます", kanji:"戦います", meaning:"Chiến đấu, đối đầu"},
+    {word:"かちます", kanji:"勝ちます", meaning:"Chiến thắng"},
+    {word:"まけます", kanji:"負けます", meaning:"Thua cuộc, chịu thua"},
+    {word:"おうえんします", kanji:"応援します", meaning:"Cổ vũ, ủng hộ"},
+    {word:"はくしゅします", kanji:"拍手します", meaning:"Vỗ tay tán thưởng"},
+    {word:"あいさつします", kanji:"挨拶します", meaning:"Chào hỏi"},
+    {word:"あくしゅします", kanji:"握手します", meaning:"Bắt tay"},
+    {word:"おじぎします", kanji:"お辞儀します", meaning:"Cúi đầu chào"},
+    {word:"したがえます", kanji:"従えます", meaning:"Dẫn theo, chỉ huy"},
+    {word:"みならいます", kanji:"見習います", meaning:"Học tập theo gương"},
+    {word:"みのがします", kanji:"見逃します", meaning:"Bỏ lỡ, tha thứ bỏ qua"},
+    {word:"みはからいます", kanji:"見計らいます", meaning:"Căn giờ, chọn thời điểm"},
+    {word:"みあわせます", kanji:"見合わせます", meaning:"Nhìn nhau / Tạm hoãn"},
+    {word:"おごります", kanji:"奢ります", meaning:"Bao, khao chầu ăn"},
+    {word:"わりびきます", kanji:"割り引きます", meaning:"Giảm giá chiết khấu"},
+    {word:"つりあいます", kanji:"釣り合います", meaning:"Cân xứng, môn đăng hộ đối"},
+    {word:"つきあいます", kanji:"付き合います", meaning:"Hẹn hò, giao lưu, cùng đi"},
+    {word:"はなしあいます", kanji:"話し合います", meaning:"Bàn bạc, trao đổi ý kiến"},
+    {word:"ちかづきます", kanji:"近づきます", meaning:"Tiến lại gần, tiếp cận"},
+    {word:"とおざかります", kanji:"遠ざかります", meaning:"Xa cách dần, khuất xa"},
+    {word:"おいつきます", kanji:"追いつきます", meaning:"Đuổi kịp"},
+    {word:"おいこします", kanji:"追い越します", meaning:"Vượt lên trên mặt"},
+    {word:"すれちがいます", kanji:"すれ違います", meaning:"Đi lướt qua nhau / Bất đồng"}
+  ]},
+
+  // ── THẺ 6: ĐỘNG TỪ GHÉP & CHUYỂN ĐỘNG (MASU) (120 TỪ) ──
+  { lesson: 11, topic: "Động từ ghép chuyển động & hướng đi (Masu 1-60)", vocabulary: [
+    {word:"たちあがります", kanji:"立ち上がります", meaning:"Đứng dậy, vùng lên"},
+    {word:"とびあがります", kanji:"飛び上がります", meaning:"Nhảy cẫng lên"},
+    {word:"うかびあがります", kanji:"浮かび上がります", meaning:"Nổi lên mặt nước / Lộ diện"},
+    {word:"まいあがります", kanji:"舞い上がります", meaning:"Bay lượn trên cao / Hưng phấn"},
+    {word:"もえあがります", kanji:"燃え上がります", meaning:"Bùng cháy cuồn cuộn"},
+    {word:"もりあがります", kanji:"盛り上がります", meaning:"Sôi nổi náo nhiệt / Đắp cao"},
+    {word:"わきあがります", kanji:"湧き上がります", meaning:"Trào dâng, sôi sục"},
+    {word:"はれあがります", kanji:"晴れ上がります", meaning:"Trời quang mây tạnh"},
+    {word:"ふるえたてます", kanji:"震え立てます", meaning:"Run rẩy kích động"},
+    {word:"ひきあげます", kanji:"引き上げます", meaning:"Kéo lên, tăng mức giá"},
+    {word:"もちあげます", kanji:"持ち上げます", meaning:"Nâng bổng lên / Nịnh nọt"},
+    {word:"みあげます", kanji:"見上げます", meaning:"Ngước mắt nhìn lên"},
+    {word:"つみあげます", kanji:"積み上げます", meaning:"Chất đống, tích lũy công sức"},
+    {word:"うちあげます", kanji:"打ち上げます", meaning:"Bắn (pháo hoa) / Kết thúc dự án"},
+    {word:"たちあげます", kanji:"立ち上げます", meaning:"Khởi động máy / Thành lập dự án"},
+    {word:"きりあげます", kanji:"切り上げます", meaning:"Kết thúc công việc / Làm tròn số"},
+    {word:"くりあげます", kanji:"繰り上げます", meaning:"Đẩy sớm lịch trình lên"},
+    {word:"みがきあげます", kanji:"磨き上げます", meaning:"Đánh bóng sạch bóng"},
+    {word:"きたえあげます", kanji:"鍛え上げます", meaning:"Rèn luyện tôi luyện kỹ càng"},
+    {word:"そだてあげます", kanji:"育て上げます", meaning:"Nuôi dạy nên người"},
+    {word:"よみあげます", kanji:"読み上げます", meaning:"Đọc to thành tiếng"},
+    {word:"かぞえあげます", kanji:"数え上げます", meaning:"Đếm từng mục một"},
+    {word:"なげすてます", kanji:"投げ捨てます", meaning:"Vứt bỏ, ném bỏ lung tung"},
+    {word:"はきすてます", kanji:"吐き捨てます", meaning:"Nhổ toẹt ra / Buông lời thô lỗ"},
+    {word:"ぬぎすてます", kanji:"脱ぎ捨てます", meaning:"Cởi vứt bừa bãi"},
+    {word:"みすてます", kanji:"見捨てます", meaning:"Bỏ rơi, ruồng bỏ"},
+    {word:"おいだします", kanji:"追い出します", meaning:"Đuổi cút đi, trục xuất"},
+    {word:"つれだします", kanji:"連れ出します", meaning:"Dẫn dắt ai ra ngoài"},
+    {word:"ひきだします", kanji:"引き出します", meaning:"Rút tiền / Kéo ngăn bàn ra"},
+    {word:"もちだします", kanji:"持ち出します", meaning:"Mang tài liệu ra ngoài"},
+    {word:"ぬけだします", kanji:"抜け出します", meaning:"Lẻn trốn thoát ra"},
+    {word:"とびだします", kanji:"飛び出します", meaning:"Lao bổ ra đường"},
+    {word:"にげだします", kanji:"逃げ出します", meaning:"Bỏ chạy trốn"},
+    {word:"はいだします", kanji:"這い出します", meaning:"Bò lết ra ngoài"},
+    {word:"みつけだします", kanji:"見つけ出します", meaning:"Tìm tòi lùng ra bằng được"},
+    {word:"さがしだします", kanji:"探し出します", meaning:"Tìm ra manh mối"},
+    {word:"おもいだします", kanji:"思い出す", meaning:"Nhớ lại ký ức"},
+    {word:"かんがえだします", kanji:"考え出します", meaning:"Nghĩ ra sáng chế"},
+    {word:"うみだします", kanji:"生み出します", meaning:"Sáng tạo ra, đem lại hiệu quả"},
+    {word:"つくりだします", kanji:"作り出します", meaning:"Tạo dựng ra sản phẩm"},
+    {word:"ほりだします", kanji:"掘り出します", meaning:"Đào bới lên / Khai quật"},
+    {word:"すいだします", kanji:"吸い出します", meaning:"Hút chất lỏng ra ngoài"},
+    {word:"しぼりだします", kanji:"絞り出します", meaning:"Vắt kiệt nước / Ép ra ý tưởng"},
+    {word:"ぬきだします", kanji:"抜き出します", meaning:"Trích xuất lấy ra"},
+    {word:"いいだします", kanji:"言い出します", meaning:"Mở lời, ngỏ ý trước"},
+    {word:"たのみこみます", kanji:"頼み込みます", meaning:"Khẩn khoản nài nỉ xin xỏ"},
+    {word:"おしこみます", kanji:"押し込みます", meaning:"Nhồi nhét ấn sâu vào"},
+    {word:"つめこみます", kanji:"詰め込みます", meaning:"Nhồi nhét hành lý/kiến thức"},
+    {word:"のみこみます", kanji:"飲み込みます", meaning:"Nuốt ực vào / Thấu hiểu nhanh"},
+    {word:"はきこみます", kanji:"履き込みます", meaning:"Đi giày vừa chân"},
+    {word:"すいこみます", kanji:"吸い込みます", meaning:"Hít sâu khói bụi vào phổi"},
+    {word:"とけこみます", kanji:"溶け込みます", meaning:"Hòa tan / Hòa nhập môi trường"},
+    {word:"なじみます", kanji:"馴染みます", meaning:"Quen thuộc, thích nghi tốt"},
+    {word:"ふみこみます", kanji:"踏み込みます", meaning:"Bước dấn sâu vào / Đột kích"},
+    {word:"ちからをいれます", kanji:"力を入れます", meaning:"Dồn hết tâm lực vào"},
+    {word:"てをいれます", kanji:"手を入れます", meaning:"Sửa sang chỉnh đốn lại"},
+    {word:"きをつけます", kanji:"気を付けます", meaning:"Cẩn thận dè chừng"},
+    {word:"めをとおします", kanji:"目を通します", meaning:"Xem lướt qua hồ sơ"},
+    {word:"みみをうたがいます", kanji:"耳を疑います", meaning:"Không tin nổi vào tai mình"},
+    {word:"くちをはさみます", kanji:"口を挟みます", meaning:"Xen mồm vào chen ngang"}
+  ]},
+  { lesson: 12, topic: "Động từ ghép thao tác, hoàn thành & công việc (Masu 61-120)", vocabulary: [
+    {word:"やりなおします", kanji:"やり直します", meaning:"Làm lại từ đầu"},
+    {word:"みなおします", kanji:"見直します", meaning:"Xem xét soát lại / Đánh giá lại"},
+    {word:"かんがえなおします", kanji:"考え直します", meaning:"Nghĩ lại suy tính lại"},
+    {word:"ききなおします", kanji:"聞き直します", meaning:"Hỏi lại cho rõ ràng"},
+    {word:"いいなおします", kanji:"言い直します", meaning:"Nói lại cho chuẩn xác"},
+    {word:"よみなおします", kanji:"読み直します", meaning:"Đọc lại văn bản"},
+    {word:"かきなおします", kanji:"書き直します", meaning:"Viết lại bản thảo"},
+    {word:"たてなおします", kanji:"立て直します", meaning:"Xây dựng tái thiết lại"},
+    {word:"もちなおします", kanji:"持ち直します", meaning:"Chuyển biến tốt lên (sức khỏe/kinh tế)"},
+    {word:"おもいなおします", kanji:"思い直します", meaning:"Đổi ý, thay đổi quyết định"},
+    {word:"でなおします", kanji:"出直します", meaning:"Đến lại lần sau / Bắt đầu lại"},
+    {word:"しあげます", kanji:"仕上げます", meaning:"Hoàn thiện nốt công đoạn"},
+    {word:"できあがります", kanji:"出来上がります", meaning:"Được hoàn thành xong xuôi"},
+    {word:"かきあげます", kanji:"書き上げます", meaning:"Viết xong xuôi toàn bộ"},
+    {word:"つくりあげます", kanji:"作り上げます", meaning:"Tạo dựng hoàn tất"},
+    {word:"たきあげます", kanji:"炊き上げます", meaning:"Nấu chín cơm"},
+    {word:"ぬりあげます", kanji:"塗り上げます", meaning:"Sơn phủ kín toàn bộ"},
+    {word:"しめきります", kanji:"締め切ります", meaning:"Hết hạn nộp, chốt sổ"},
+    {word:"うりきれます", kanji:"売り切れます", meaning:"Bán hết sạch hàng"},
+    {word:"つかいきります", kanji:"使い切ります", meaning:"Dùng cạn kiệt không còn dư"},
+    {word:"たべきります", kanji:"食べ切ります", meaning:"Ăn sạch sành sanh"},
+    {word:"のみきります", kanji:"飲み切ります", meaning:"Uống cạn sạch"},
+    {word:"にげきります", kanji:"逃げ切ります", meaning:"Chạy trốn thoát trót lọt"},
+    {word:"いいきります", kanji:"言い切ります", meaning:"Tuyên bố quả quyết khẳng định"},
+    {word:"かぞえきれません", kanji:"数え切れません", meaning:"Nhiều không đếm xuể"},
+    {word:"たえきれません", kanji:"耐え切れません", meaning:"Không thể chịu đựng nổi nữa"},
+    {word:"わりこみます", kanji:"割り込みます", meaning:"Chen ngang dòng người/hàng"},
+    {word:"とびこみます", kanji:"飛び込みます", meaning:"Lao nhảy nhào vào hồ/xe"},
+    {word:"のりこみます", kanji:"乗り込みます", meaning:"Lên xe / Tiến thẳng vào sào huyệt"},
+    {word:"つっこみます", kanji:"突っ込みます", meaning:"Đâm sầm vào / Chọc ngoáy châm biếm"},
+    {word:"おちこみます", kanji:"落ち込みます", meaning:"Suy sụp tinh thần, tụt dốc"},
+    {word:"すわりこみます", kanji:"座り込みます", meaning:"Ngồi bệt thụp xuống đất"},
+    {word:"ねこみます", kanji:"寝込みます", meaning:"Li bì ốm liệt giường"},
+    {word:"はなしこみます", kanji:"話し込みます", meaning:"Trò chuyện say sưa quên giờ"},
+    {word:"だまりこみます", kanji:"黙り込みます", meaning:"Im bặt nín thinh"},
+    {word:"とまりこみます", kanji:"泊まり込みます", meaning:"Trọ lại qua đêm để cày việc"},
+    {word:"すきとおります", kanji:"透き通ります", meaning:"Trong suốt nhìn thấu qua"},
+    {word:"とおりかかります", kanji:"通りかかります", meaning:"Vô tình tình cờ đi ngang qua"},
+    {word:"みかけます", kanji:"見かけます", meaning:"Tình cờ bắt gặp"},
+    {word:"みおくります", kanji:"見送ります", meaning:"Tiễn chân / Hoãn thi hành"},
+    {word:"みわたします", kanji:"見渡します", meaning:"Phóng tầm mắt nhìn bao quát"},
+    {word:"たちどまります", kanji:"立ち止まります", meaning:"Dừng bước đứng khựng lại"},
+    {word:"たちよります", kanji:"立ち寄ります", meaning:"Tạt vào ghé qua chút lát"},
+    {word:"よりみちします", kanji:"寄り道します", meaning:"La cà trên đường về"},
+    {word:"ひきかえします", kanji:"引き返します", meaning:"Quay ngược trở lại nửa đường"},
+    {word:"もちはこびます", kanji:"持ち運びます", meaning:"Khuân vác di chuyển đồ"},
+    {word:"とりあつかいます", kanji:"取り扱います", meaning:"Thao tác sử dụng / Kinh doanh mặt hàng"},
+    {word:"とりくみます", kanji:"取り組みます", meaning:"Nỗ lực bắt tay vào giải quyết"},
+    {word:"とりまとめます", kanji:"取りまとめます", meaning:"Thu gom gom góp đúc kết lại"},
+    {word:"とりいれます", kanji:"取り入れます", meaning:"Áp dụng đưa vào thực tế"},
+    {word:"うけいれます", kanji:"受け入れます", meaning:"Tiếp nhận dung nạp bao dung"},
+    {word:"とりはずします", kanji:"取り外します", meaning:"Tháo rời chi tiết linh kiện"},
+    {word:"くみたてます", kanji:"組み立てます", meaning:"Lắp ráp hoàn chỉnh mô hình"},
+    {word:"ひきうけます", kanji:"引き受けます", meaning:"Nhận lãnh trách nhiệm đảm nhận việc"},
+    {word:"ひきとめます", kanji:"引き止めます", meaning:"Níu giữ lại không cho đi"},
+    {word:"みあわせます", kanji:"見合わせます", meaning:"Nhìn nhau ngơ ngác / Tạm hoãn chuyến tàu"},
+    {word:"といあわせます", kanji:"問い合わせます", meaning:"Hỏi đáp tư vấn thông tin"},
+    {word:"もうしこみます", kanji:"申し込みます", meaning:"Nộp đơn đăng ký dự thi"},
+    {word:"しめくくります", kanji:"締めくくります", meaning:"Tóm tắt đúc kết lại buổi họp"},
+    {word:"うりだします", kanji:"売り出します", meaning:"Bắt đầu mở bán ra thị trường"}
+  ]},
+
+  // ── THẺ 7: DANH TỪ TRỪU TƯỢNG, XÃ HỘI & TIỀN TỐ/HẬU TỐ (120 TỪ) ──
+  { lesson: 13, topic: "Khái niệm, quy tắc & hiện tượng xã hội (1-60)", vocabulary: [
+    {word:"げんしょう", kanji:"現象", meaning:"Hiện tượng đời sống/tự nhiên"},
+    {word:"じじつ", kanji:"事実", meaning:"Sự thật hiển nhiên"},
+    {word:"しんじつ", kanji:"真実", meaning:"Chân lý, sự thật cốt lõi"},
+    {word:"げんじつ", kanji:"現実", meaning:"Thực tế, hiện thực phũ phàng"},
+    {word:"りそう", kanji:"理想", meaning:"Lý tưởng mơ ước"},
+    {word:"くうそう", kanji:"空想", meaning:"Không tưởng, mơ mộng hão huyền"},
+    {word:"かんかく", kanji:"感覚", meaning:"Cảm giác, giác quan"},
+    {word:"きおく", kanji:"記憶", meaning:"Ký ức, trí nhớ ghi nhớ"},
+    {word:"ちしき", kanji:"知識", meaning:"Tri thức, kiến thức sâu rộng"},
+    {word:"じょうしき", kanji:"常識", meaning:"Thường thức, kiến thức phổ thông"},
+    {word:"ひじょうしき", kanji:"非常識", meaning:"Thiếu ý thức, vô phép tắc"},
+    {word:"ぎもん", kanji:"疑問", meaning:"Nghi vấn, thắc mắc đặt ra"},
+    {word:"なぞ", kanji:"謎", meaning:"Bí ẩn, điều bí hiểm"},
+    {word:"ひみつ", kanji:"秘密", meaning:"Bí mật giữ kín"},
+    {word:"あいまい", kanji:"", meaning:"Mơ hồ, mập mờ không rõ"},
+    {word:"かんけい", kanji:"関係", meaning:"Quan hệ, mối liên hệ"},
+    {word:"かんれん", kanji:"関連", meaning:"Liên quan, dính líu hệ lụy"},
+    {word:"えいきょう", kanji:"影響", meaning:"Ảnh hưởng tác động"},
+    {word:"こうか", kanji:"効果", meaning:"Hiệu quả thuốc men/biện pháp"},
+    {word:"けっか", kanji:"結果", meaning:"Kết quả cuối cùng"},
+    {word:"げんいん", kanji:"原因", meaning:"Nguyên nhân dẫn tới"},
+    {word:"りゆう", kanji:"理由", meaning:"Lý do giải thích"},
+    {word:"きっかけ", kanji:"", meaning:"Cơ duyên, động cơ xuất phát"},
+    {word:"もくてき", kanji:"目的", meaning:"Mục đích hướng đến"},
+    {word:"もくひょう", kanji:"目標", meaning:"Mục tiêu cột mốc"},
+    {word:"しゅだん", kanji:"手段", meaning:"Phương tiện, thủ đoạn thực hiện"},
+    {word:"ほうほう", kanji:"方法", meaning:"Phương pháp thực hiện"},
+    {word:"やりかた", kanji:"やり方", meaning:"Cách thức làm việc"},
+    {word:"てじゅん", kanji:"手順", meaning:"Trình tự các bước"},
+    {word:"じゅんばん", kanji:"順番", meaning:"Lượt thứ tự chờ đợi"},
+    {word:"きそく", kanji:"規則", meaning:"Quy tắc, nội quy điều lệ"},
+    {word:"きじゅん", kanji:"基準", meaning:"Quy chuẩn tiêu chuẩn cơ sở"},
+    {word:"ひょうじゅん", kanji:"標準", meaning:"Tiêu chuẩn bình thường định mức"},
+    {word:"ほうりつ", kanji:"法律", meaning:"Pháp luật nhà nước"},
+    {word:"せいど", kanji:"制度", meaning:"Chế độ chính sách"},
+    {word:"ぎょうじ", kanji:"行事", meaning:"Sự kiện, lễ hội thường niên"},
+    {word:"ぎしき", kanji:"儀式", meaning:"Nghi thức trang trọng"},
+    {word:"ふうしゅう", kanji:"風習", meaning:"Phong tục tập quán xưa"},
+    {word:"しゅうかん", kanji:"習慣", meaning:"Thói quen cá nhân/xã hội"},
+    {word:"でんとう", kanji:"伝統", meaning:"Truyền thống lâu đời"},
+    {word:"ぶんか", kanji:"文化", meaning:"Văn hóa"},
+    {word:"げいじゅつ", kanji:"芸術", meaning:"Nghệ thuật đỉnh cao"},
+    {word:"ぶんがく", kanji:"文学", meaning:"Văn học tác phẩm"},
+    {word:"れきし", kanji:"歴史", meaning:"Lịch sử sử sách"},
+    {word:"ちり", kanji:"地理", meaning:"Địa lý tự nhiên"},
+    {word:"しぜん", kanji:"自然", meaning:"Thiên nhiên hoang dã"},
+    {word:"かんきょう", kanji:"環境", meaning:"Môi trường bao quanh"},
+    {word:"こうがい", kanji:"公害", meaning:"Ô nhiễm công hại"},
+    {word:"おせん", kanji:"汚染", meaning:"Ô nhiễm độc hại"},
+    {word:"ごみ", kanji:"", meaning:"Rác thải sinh hoạt"},
+    {word:"リサイクル", kanji:"", meaning:"Tái chế rác"},
+    {word:"しょうえね", kanji:"省エネ", meaning:"Tiết kiệm năng lượng"},
+    {word:"資源", kanji:"しげん", meaning:"Tài nguyên thiên nhiên"},
+    {word:"エネルギー", kanji:"", meaning:"Năng lượng cung cấp"},
+    {word:"でんりょく", kanji:"電力", meaning:"Điện lực nguồn điện"},
+    {word:"はつでん", kanji:"発電", meaning:"Phát điện, trạm điện"},
+    {word:"げんぱつ", kanji:"原発", meaning:"Nhà máy điện hạt nhân"},
+    {word:"さいがい", kanji:"災害", meaning:"Thiên tai thảm họa"},
+    {word:"ひがい", kanji:"被害", meaning:"Thiệt hại tổn thất nặng"},
+    {word:"ひなん", kanji:"避難", meaning:"Sơ tán, lánh nạn khẩn cấp"}
+  ]},
+  { lesson: 14, topic: "Tiền tố, hậu tố & Từ vựng ghép đề thi (61-120)", vocabulary: [
+    {word:"むりょう", kanji:"無料", meaning:"Miễn phí hoàn toàn"},
+    {word:"むだ", kanji:"無駄", meaning:"Lãng phí công cốc"},
+    {word:"むかんしん", kanji:"無関心", meaning:"Vô tâm thờ ơ lạnh nhạt"},
+    {word:"むせきにん", kanji:"無責任", meaning:"Vô trách nhiệm buông xuôi"},
+    {word:"むいみ", kanji:"無意味", meaning:"Vô nghĩa, vô tích sự"},
+    {word:"むのう", kanji:"無能", meaning:"Bất tài vô dụng"},
+    {word:"むげん", kanji:"無限", meaning:"Vô hạn, không cùng tận"},
+    {word:"ふかのう", kanji:"不可能", meaning:"Bất khả thi không làm được"},
+    {word:"ふべん", kanji:"不便", meaning:"Bất tiện cách trở"},
+    {word:"ふあん", kanji:"不安", meaning:"Bất an lo âu thấp thỏm"},
+    {word:"ふそく", kanji:"不足", meaning:"Thiếu hụt số lượng/chất"},
+    {word:"ふまん", kanji:"不満", meaning:"Bất mãn, không hài lòng"},
+    {word:"ふこう", kanji:"不幸", meaning:"Bất hạnh không may"},
+    {word:"ふせい", kanji:"不正", meaning:"Bất chính, gian lận sai trái"},
+    {word:"ふしぜん", kanji:"不自然", meaning:"Không tự nhiên, gượng gạo"},
+    {word:"みかんせい", kanji:"未完成", meaning:"Chưa hoàn thành còn dang dở"},
+    {word:"みてい", kanji:"未定", meaning:"Chưa ấn định ngày giờ"},
+    {word:"みせいねん", kanji:"未成年", meaning:"Vị thành niên chưa đủ tuổi"},
+    {word:"みかいけつ", kanji:"未解決", meaning:"Chưa được giải quyết dứt điểm"},
+    {word:"さいりよう", kanji:"再利用", meaning:"Tái sử dụng lại đồ cũ"},
+    {word:"さいかいはつ", kanji:"再開発", meaning:"Tái quy hoạch phát triển đô thị"},
+    {word:"さいしゅっぱつ", kanji:"再出発", meaning:"Khởi đầu lại từ đầu"},
+    {word:"さいくにん", kanji:"再確認", meaning:"Xác nhận kiểm tra lại lần hai"},
+    {word:"こうかてき", kanji:"効果的", meaning:"Mang tính hiệu quả rõ rệt"},
+    {word:"ぐたいてき", kanji:"具体的", meaning:"Mang tính cụ thể chi tiết"},
+    {word:"きほんてき", kanji:"基本的", meaning:"Mang tính cơ bản nền tảng"},
+    {word:"せっきょくてき", kanji:"積極的", meaning:"Mang tính tích cực chủ động"},
+    {word:"しょうきょくてき", kanji:"消極的", meaning:"Mang tính tiêu cực thụ động"},
+    {word:"いっぱんてき", kanji:"一般的", meaning:"Mang tính phổ thông đại trà"},
+    {word:"こじんてき", kanji:"個人的", meaning:"Mang tính cá nhân riêng tư"},
+    {word:"しゃかいてき", kanji:"社会的", meaning:"Mang tính xã hội cộng đồng"},
+    {word:"こくさいてき", kanji:"国際的", meaning:"Mang tính quốc tế toàn cầu"},
+    {word:"りそうてき", kanji:"理想的", meaning:"Mang tính lý tưởng hoàn hảo"},
+    {word:"ぜんこくてき", kanji:"全国的", meaning:"Mang quy mô toàn quốc"},
+    {word:"いちにちじゅう", kanji:"一日中", meaning:"Suốt cả ngày ròng rã"},
+    {word:"いちねんじゅう", kanji:"一年中", meaning:"Suốt cả một năm trời"},
+    {word:"せかいじゅう", kanji:"世界中", meaning:"Trên khắp thế giới"},
+    {word:"じゅぎょうちゅう", kanji:"授業中", meaning:"Đang trong giờ học"},
+    {word:"しごとちゅう", kanji:"仕事中", meaning:"Đang trong lúc làm việc"},
+    {word:"でんわちゅう", kanji:"電話中", meaning:"Đang bận nghe điện thoại"},
+    {word:"しょしんしゃ", kanji:"初心者", meaning:"Người mới nhập môn chập chững"},
+    {word:"けいけんしゃ", kanji:"経験者", meaning:"Người đã có kinh nghiệm thâm niên"},
+    {word:"せんもんか", kanji:"専門家", meaning:"Chuyên gia am tường lĩnh vực"},
+    {word:"けんきゅうしゃ", kanji:"研究者", meaning:"Nhà nghiên cứu học giả"},
+    {word:"りようしゃ", kanji:"利用者", meaning:"Người sử dụng dịch vụ"},
+    {word:"さんかしゃ", kanji:"参加者", meaning:"Người tham dự chương trình"},
+    {word:"かんけいしゃ", kanji:"関係者", meaning:"Người có phận sự liên quan"},
+    {word:"あんないしょ", kanji:"案内書", meaning:"Tài liệu sách hướng dẫn chỉ đường"},
+    {word:"せつめいしょ", kanji:"説明書", meaning:"Sách hướng dẫn sử dụng vận hành"},
+    {word:"ちゅうもんしょ", kanji:"注文書", meaning:"Đơn đặt hàng mua đồ"},
+    {word:"けいやくしょ", kanji:"契約書", meaning:"Văn bản hợp đồng ký kết"},
+    {word:"ほしょうしょ", kanji:"保証書", meaning:"Giấy phiếu bảo hành máy"},
+    {word:"りょうしゅうしょ", kanji:"領収書", meaning:"Hóa đơn biên lai thu tiền"},
+    {word:"せいきゅうしょ", kanji:"請求書", meaning:"Phiếu yêu cầu thanh toán viện phí/hàng"},
+    {word:"ほうこくしょ", kanji:"報告書", meaning:"Bản văn bản báo cáo sự vụ"},
+    {word:"しんせいしょ", kanji:"申請書", meaning:"Đơn xin cấp phép/visa"},
+    {word:"きそくしょ", kanji:"規則書", meaning:"Sách điều lệ quy định công ty"},
+    {word:"てじゅんしょ", kanji:"手順書", meaning:"Tài liệu quy trình thao tác chuẩn (SOP)"},
+    {word:"しじしょ", kanji:"指示書", meaning:"Bản phiếu chỉ thị thao tác"},
+    {word:"てんけんひょう", kanji:"点検表", meaning:"Bảng danh sách kiểm tra bảo dưỡng"}
+  ]},
+
+  // ── THẺ 8: PHÓ TỪ & LIÊN TỪ ĐỀ THI CÁC NĂM (120 TỪ) ──
+  { lesson: 15, topic: "Phó từ mức độ, tần suất & trạng thái đề thi (1-60)", vocabulary: [
+    {word:"いつも", kanji:"", meaning:"Luôn luôn, lúc nào cũng"},
+    {word:"つねに", kanji:"常に", meaning:"Thường trực, luôn luôn"},
+    {word:"ふだん", kanji:"普段", meaning:"Bình thường, ngày thường"},
+    {word:"たいてい", kanji:"", meaning:"Đại để, hầu như thường lệ"},
+    {word:"よく", kanji:"", meaning:"Thường xuyên / Rất giỏi"},
+    {word:"しばしば", kanji:"", meaning:"Thường thoảng nhiều lần"},
+    {word:"たびたび", kanji:"", meaning:"Thường xuyên, lặp đi lặp lại"},
+    {word:"たまに", kanji:"", meaning:"Thỉnh thoảng, hiếm khi ghé"},
+    {word:"めったに", kanji:"滅多に", meaning:"Hầu như không bao giờ (~phủ định)"},
+    {word:"けっして", kanji:"決して", meaning:"Tuyệt đối không bao giờ (~phủ định)"},
+    {word:"ぜったいに", kanji:"絶対に", meaning:"Tuyệt đối chắc chắn"},
+    {word:"かならず", kanji:"必ず", meaning:"Nhất định, ắt hẳn"},
+    {word:"きっと", kanji:"", meaning:"Chắc chắn là, tin chắc"},
+    {word:"ぜひ", kanji:"是非", meaning:"Nhất định mong muốn làm"},
+    {word:"たぶん", kanji:"多分", meaning:"Có lẽ là, áng chừng"},
+    {word:"おそらく", kanji:"恐らく", meaning:"Có khả năng lớn là e rằng"},
+    {word:"もしかしたら", kanji:"", meaning:"Biết đâu chừng có thể"},
+    {word:"もしかすると", kanji:"", meaning:"Có lẽ là, không chừng"},
+    {word:"どうも", kanji:"", meaning:"Dường như là / Cảm ơn"},
+    {word:"まるで", kanji:"", meaning:"Hoàn toàn hệt như là (~よう)"},
+    {word:"ちょうど", kanji:"", meaning:"Vừa đúng, vừa khít lúc"},
+    {word:"まさに", kanji:"正に", meaning:"Đúng đắn thật sự là, chính là"},
+    {word:"かなり", kanji:"", meaning:"Khá là, tương đối nhiều"},
+    {word:"ずいぶん", kanji:"随分", meaning:"Rất nhiều, cực kỳ đáng kể"},
+    {word:"けっこう", kanji:"結構", meaning:"Khá tốt, tươm tất vừa đủ"},
+    {word:"たいへん", kanji:"大変", meaning:"Rất, vô cùng vất vả"},
+    {word:"たいして", kanji:"大して", meaning:"Không...lắm (~phủ định)"},
+    {word:"ちっとも", kanji:"", meaning:"Một chút cũng không (~phủ định)"},
+    {word:"すこしも", kanji:"少しも", meaning:"Chút nào cũng không (~phủ định)"},
+    {word:"まったく", kanji:"全く", meaning:"Hoàn toàn không / Thật sự là"},
+    {word:"さっぱり", kanji:"", meaning:"Hoàn toàn không nhớ gì / Thanh mát"},
+    {word:"ちっとも", kanji:"", meaning:"Chẳng chút nào"},
+    {word:"ほぼ", kanji:"", meaning:"Gần như, hầu như hoàn thành"},
+    {word:"おおよそ", kanji:"大凡", meaning:"Đại khái khoảng chừng"},
+    {word:"だいたい", kanji:"大体", meaning:"Đại khái, phần lớn"},
+    {word:"すっかり", kanji:"", meaning:"Hoàn toàn biến mất, sạch bong"},
+    {word:"すべて", kanji:"全て", meaning:"Tất cả, toàn bộ mọi thứ"},
+    {word:"ぜんぶ", kanji:"全部", meaning:"Toàn bộ số lượng"},
+    {word:"のこらず", kanji:"残らず", meaning:"Không chừa lại chút nào"},
+    {word:"ひとりでに", kanji:"一人でに", meaning:"Tự nó mở ra, tự nhiên mà thành"},
+    {word:"おのずと", kanji:"自ずと", meaning:"Tự khắc sẽ hiểu ra"},
+    {word:"しぜんに", kanji:"自然に", meaning:"Một cách tự nhiên"},
+    {word:"ぐっと", kanji:"", meaning:"Gồng mình lên / Hơn hẳn một bậc"},
+    {word:"ぱっと", kanji:"", meaning:"Bừng sáng lên / Vụt biến"},
+    {word:"さっと", kanji:"", meaning:"Nhanh thoăn thoắt, lướt qua"},
+    {word:"ざっと", kanji:"", meaning:"Đọc lướt qua / ào ào mưa"},
+    {word:"じっと", kanji:"", meaning:"Chăm chú nhìn / Nín nhịn im re"},
+    {word:"そっと", kanji:"", meaning:"Nhẹ nhàng rón rén"},
+    {word:"ほっと", kanji:"", meaning:"Thở phào nhẹ nhõm an tâm"},
+    {word:"はっと", kanji:"", meaning:"Giật mình sực nhớ ra"},
+    {word:"どっと", kanji:"", meaning:"Ùa tới cùng lúc / Đổ bệnh sụp"},
+    {word:"ばったり", kanji:"", meaning:"Tình cờ đụng độ / Ngã quỵ"},
+    {word:"ぴったり", kanji:"", meaning:"Vừa vặn khít khao / Chuẩn xác"},
+    {word:"すっきり", kanji:"", meaning:"Sảng khoái thảnh thơi / Gọn gàng"},
+    {word:"くっきり", kanji:"", meaning:"Rõ mồn một nổi bật"},
+    {word:"あっさり", kanji:"", meaning:"Vị thanh đạm / Dễ dàng chóng vánh"},
+    {word:"こっそり", kanji:"", meaning:"Lén lút giấu giếm"},
+    {word:"ぎっしり", kanji:"", meaning:"Chật ních, lèn chặt như nêm"},
+    {word:"びっしょり", kanji:"", meaning:"Ướt đẫm mồ hôi/mưa"},
+    {word:"のんびり", kanji:"", meaning:"Thong thả ung dung tự tại"}
+  ]},
+  { lesson: 16, topic: "Liên từ, từ nối đoạn văn & đề thi đọc hiểu (61-120)", vocabulary: [
+    {word:"だから", kanji:"", meaning:"Vì thế nên, do đó"},
+    {word:"したがって", kanji:"従って", meaning:"Do đó, theo đó suy ra (trang trọng)"},
+    {word:"そのために", kanji:"その為に", meaning:"Chính vì lý do đó nên"},
+    {word:"それゆえ", kanji:"それ故", meaning:"Bởi lẽ đó, chính vì thế"},
+    {word:"そこで", kanji:"", meaning:"Do vậy mà (đưa ra hành động tiếp)"},
+    {word:"すると", kanji:"", meaning:"Thế là ngay lập tức, vừa làm thì"},
+    {word:"なぜなら", kanji:"何故なら", meaning:"Lý do là vì (~からだ)"},
+    {word:"というのも", kanji:"", meaning:"Bởi vì là (giải thích căn nguyên)"},
+    {word:"しかし", kanji:"", meaning:"Thế nhưng mà, tuy nhiên"},
+    {word:"けれども", kanji:"", meaning:"Dẫu vậy, tuy thế"},
+    {word:"だが", kanji:"", meaning:"Tuy vậy, nhưng mà"},
+    {word:"ところが", kanji:"", meaning:"Ấy thế nhưng mà (kết quả bất ngờ)"},
+    {word:"それにしても", kanji:"", meaning:"Dù là thế đi chăng nữa thì"},
+    {word:"それなのに", kanji:"", meaning:"Thế mà lại (bất mãn oán trách)"},
+    {word:"にもかかわらず", kanji:"", meaning:"Mặc dù thế, bất chấp điều đó"},
+    {word:"そして", kanji:"", meaning:"Và rồi sau đó, thêm nữa"},
+    {word:"それから", kanji:"", meaning:"Sau đó thì tiếp theo"},
+    {word:"また", kanji:"又", meaning:"Hơn nữa, ngoài ra còn có"},
+    {word:"および", kanji:"及び", meaning:"Và, cùng với (văn bản luật)"},
+    {word:"ならびに", kanji:"並びに", meaning:"Cũng như, kèm theo"},
+    {word:"それに", kanji:"", meaning:"Hơn thế nữa, thêm vào đó"},
+    {word:"そのうえ", kanji:"その上", meaning:"Thêm vào đó nữa, vả lại"},
+    {word:"しかも", kanji:"", meaning:"Hơn nữa lại còn (nhấn mạnh tính chất)"},
+    {word:"おまけに", kanji:"", meaning:"Đã thế lại còn (thường tiêu cực)"},
+    {word:"あるいは", kanji:"或いは", meaning:"Hoặc là, hay là"},
+    {word:"または", kanji:"又は", meaning:"Hoặc giả là lựa chọn A/B"},
+    {word:"それとも", kanji:"", meaning:"Hay là (câu hỏi lựa chọn)"},
+    {word:"つまり", kanji:"", meaning:"Nói cách khác là, tóm lại là"},
+    {word:"すなわち", kanji:"", meaning:"Tức là, chính là định nghĩa"},
+    {word:"要するに", kanji:"ようするに", meaning:"Tóm lại ngắn gọn là"},
+    {word:"たとえば", kanji:"例えば", meaning:"Ví dụ như là minh chứng"},
+    {word:"具体的には", kanji:"ぐたいてきには", meaning:"Cụ thể rõ ràng hơn là"},
+    {word:"じつは", kanji:"実は", meaning:"Thực ra là, sự thật là"},
+    {word:"ただし", kanji:"", meaning:"Tuy nhiên có điều kiện ngoại lệ là"},
+    {word:"もっとも", kanji:"", meaning:"Dẫu nói vậy nhưng có điều"},
+    {word:"なお", kanji:"", meaning:"Nói thêm là, xin lưu ý thêm"},
+    {word:"ちなみに", kanji:"", meaning:"Nhân tiện đây xin nói thêm"},
+    {word:"さて", kanji:"", meaning:"Và sau đây, chuyển sang chủ đề mới"},
+    {word:"ところで", kanji:"", meaning:"Thế còn chuyện này thì sao (đổi đề tài)"},
+    {word:"それでは", kanji:"", meaning:"Vậy thì tiếp theo sau đây"},
+    {word:"では", kanji:"", meaning:"Thế thì bắt đầu nào"},
+    {word:"とにかく", kanji:"", meaning:"Dù sao đi nữa thì trước mắt"},
+    {word:"ともかく", kanji:"", meaning:"Khoan bàn tới việc đó, dù sao thì"},
+    {word:"いずれにしても", kanji:"", meaning:"Đằng nào thì cũng vậy"},
+    {word:"どうせ", kanji:"", meaning:"Đằng nào thì kết cục cũng thế"},
+    {word:"せめて", kanji:"", meaning:"Ít nhất thì, chí ít giá như"},
+    {word:"すくなくとも", kanji:"少なくとも", meaning:"Chí ít tối thiểu mức sàn"},
+    {word:"せいぜい", kanji:"精々", meaning:"Tối đa cùng lắm chỉ là"},
+    {word:"さいわい", kanji:"幸い", meaning:"May mắn thay điều lành"},
+    {word:"あいにく", kanji:"", meaning:"Không may thật đáng tiếc"},
+    {word:"うっかり", kanji:"", meaning:"Lơ đãng vô ý quên phái"},
+    {word:"思わず", kanji:"おもわず", meaning:"Bất giác không kìm được"},
+    {word:"わざと", kanji:"", meaning:"Cố tình, cố ý làm hỏng"},
+    {word:"わざわざ", kanji:"", meaning:"Cất công lặn lội đi tới"},
+    {word:"せっかく", kanji:"折角", meaning:"Cất công bỏ sức bõ công"},
+    {word:"案外", kanji:"あんがい", meaning:"Bất ngờ ngoài dự tính"},
+    {word:"意外に", kanji:"いがいに", meaning:"Ngạc nhiên khác hẳn nghĩ ban đầu"},
+    {word:"まさか", kanji:"", meaning:"Chẳng lẽ nào lại có chuyện đó"},
+    {word:"やはり", kanji:"", meaning:"Quả nhiên đúng như dự đoán"},
+    {word:"とうとう", kanji:"", meaning:"Cuối cùng sau bao chờ đợi"}
+  ]}
+];
+
+// ═════════════════════════════════════════════════════════════════
+// GROUPS CONFIG (GỘP THÀNH 120 TỪ / THẺ)
+// ═════════════════════════════════════════════════════════════════
+const GROUPS = [
+  { label:"THẺ 1: DANH TỪ ĐỜI SỐNG & XÃ HỘI", min:1, max:2, sub:"Đời sống, con người, thiết bị & quan hệ (120 từ)" },
+  { label:"THẺ 2: CÔNG VIỆC, KỸ THUẬT & MÔI TRƯỜNG", min:3, max:4, sub:"Doanh nghiệp, máy móc, sản xuất & tự nhiên (120 từ)" },
+  { label:"THẺ 3: TỰ ĐỘNG TỪ & THA ĐỘNG TỪ (MASU)", min:5, max:6, sub:"Cặp tự - tha động từ chia theo thể Masu (120 từ)" },
+  { label:"THẺ 4: TÍNH TỪ, PHÓ TỪ & ĐỀ THI", min:7, max:8, sub:"Tính từ, phó từ tượng hình & đề thi thực chiến (120 từ)" },
+  { label:"THẺ 5: ĐỘNG TỪ TƯ DUY & GIAO TIẾP (MASU)", min:9, max:10, sub:"Hành động tâm lý, cảm xúc, quan hệ xã hội (120 từ)" },
+  { label:"THẺ 6: ĐỘNG TỪ GHÉP & CHUYỂN ĐỘNG (MASU)", min:11, max:12, sub:"Động từ ghép hay gặp trong đề thi N3 (120 từ)" },
+  { label:"THẺ 7: DANH TỪ TRỪU TƯỢNG & TỔNG HỢP", min:13, max:14, sub:"Hiện tượng, khái niệm, tiền tố & hậu tố N3 (120 từ)" },
+  { label:"THẺ 8: PHÓ TỪ & LIÊN TỪ ĐỀ THI CÁC NĂM", min:15, max:16, sub:"Phó từ mức độ, trạng thái & liên từ đọc hiểu (120 từ)" },
+  { label:"TỔNG HỢP TOÀN BỘ N3 MASTER (960 TỪ)", min:1, max:16, sub:"Luyện tập toàn bộ ngân hàng từ vựng N3" }
+];
+
+// ═════════════════════════════════════════════════════════════════
+// STATE & CORE LOGIC
+// ═════════════════════════════════════════════════════════════════
+let selectedGroup = null;
+let quizPool = [];
+let currentMode = '';
+let currentIdx = 0;
+let score = 0;
+
+function totalWords() {
+  return DB.reduce((s, l) => s + l.vocabulary.length, 0);
+}
+
+function wordsInGroup(min, max) {
+  return DB.filter(l => l.lesson >= min && l.lesson <= max)
+           .reduce((s, l) => s + l.vocabulary.length, 0);
+}
+
+function buildMenu() {
+  document.getElementById('total-badge').textContent = `${totalWords()} từ vựng · Mimikara & Đề N3 (Masu Form)`;
+  const grid = document.getElementById('group-grid');
+  grid.innerHTML = '';
+  GROUPS.forEach((g, i) => {
+    const count = wordsInGroup(g.min, g.max);
+    const card = document.createElement('div');
+    card.className = 'group-card';
+    card.innerHTML = `
+      <div class="group-num">${i < GROUPS.length - 1 ? (i+1) : '★'}</div>
+      <div class="group-info">
+        <b>${g.label}</b>
+        <span>${g.sub}</span>
+      </div>
+      <div class="group-count">${count} từ</div>
+    `;
+    card.onclick = () => selectGroup(i);
+    grid.appendChild(card);
+  });
+}
+
+function selectGroup(idx) {
+  selectedGroup = GROUPS[idx];
+  document.getElementById('mode-title').textContent = selectedGroup.label;
+  document.getElementById('mode-sub').textContent = `${wordsInGroup(selectedGroup.min, selectedGroup.max)} từ vựng`;
+  goTo('s-mode');
+}
+
+function getAllWords() {
+  const lessons = DB.filter(l => l.lesson >= selectedGroup.min && l.lesson <= selectedGroup.max);
+  return lessons.flatMap(l => l.vocabulary);
+}
+
+function startQuiz(mode) {
+  currentMode = mode;
+  const all = getAllWords();
+  if (mode === 'kanji') {
+    quizPool = all.filter(v => v.kanji && v.kanji.trim() !== '');
+    if (quizPool.length === 0) { alert('Nhóm này không có từ chứa Kanji!'); return; }
+  } else {
+    quizPool = [...all];
+  }
+  quizPool.sort(() => Math.random() - 0.5);
+  currentIdx = 0;
+  score = 0;
+  goTo('s-quiz');
+  renderQuestion();
+}
+
+function restartQuiz() {
+  startQuiz(currentMode);
+  goTo('s-quiz');
+}
+
+function goTo(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+}
+
+function getAllWordsForDistractors() {
+  return DB.flatMap(l => l.vocabulary);
+}
+
+function renderQuestion() {
+  if (currentIdx >= quizPool.length) { showResult(); return; }
+
+  const item = quizPool[currentIdx];
+  const pct = (currentIdx / quizPool.length) * 100;
+  document.getElementById('q-fill').style.width = pct + '%';
+  document.getElementById('q-count').textContent = `${currentIdx + 1} / ${quizPool.length}`;
+  document.getElementById('q-score').textContent = `✓ ${score}`;
+
+  let displayText, correctAnswer, hint;
+  if (currentMode === 'kanji') {
+    displayText = item.kanji;
+    correctAnswer = `${item.word}（${item.meaning}）`;
+    hint = 'Chọn cách đọc Hiragana + Nghĩa';
+  } else if (currentMode === 'kana') {
+    displayText = item.word;
+    correctAnswer = item.meaning;
+    hint = 'Chọn nghĩa tiếng Việt';
+  } else { // meaning → kana/kanji
+    displayText = item.meaning;
+    correctAnswer = item.kanji ? `${item.word}【${item.kanji}】` : item.word;
+    hint = 'Chọn từ tiếng Nhật tương ứng';
+  }
+
+  document.getElementById('q-main').textContent = displayText;
+  document.getElementById('q-hint').textContent = hint;
+
+  const allWords = getAllWordsForDistractors();
+  const options = new Set([correctAnswer]);
+  let attempts = 0;
+  while (options.size < 4 && attempts < 200) {
+    attempts++;
+    const r = allWords[Math.floor(Math.random() * allWords.length)];
+    let opt;
+    if (currentMode === 'kanji') {
+      if (!r.kanji || r.kanji.trim() === '') continue;
+      opt = `${r.word}（${r.meaning}）`;
+    } else if (currentMode === 'kana') {
+      opt = r.meaning;
+    } else {
+      opt = r.kanji ? `${r.word}【${r.kanji}】` : r.word;
+    }
+    if (opt !== correctAnswer) options.add(opt);
+  }
+  const shuffled = [...options].sort(() => Math.random() - 0.5);
+
+  const box = document.getElementById('q-opts');
+  box.innerHTML = '';
+  shuffled.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = opt;
+    btn.onclick = () => handleAnswer(btn, opt, correctAnswer);
+    box.appendChild(btn);
+  });
+}
+
+function handleAnswer(btn, selected, correct) {
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true;
+    b.onclick = null;
+  });
+  if (selected === correct) {
+    btn.classList.add('correct');
+    score++;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt').forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct');
+    });
+  }
+  setTimeout(() => { currentIdx++; renderQuestion(); }, 750);
+}
+
+function showResult() {
+  goTo('s-result');
+  const pct = Math.round((score / quizPool.length) * 100);
+  document.getElementById('r-score').textContent = `${score} / ${quizPool.length}`;
+  document.getElementById('r-pct').textContent = `${pct}% chính xác`;
+  document.getElementById('r-label').textContent = `Chế độ: ${currentMode === 'kanji' ? 'KANJI' : currentMode === 'kana' ? 'KANA' : 'NGHĨA → KANA'} · ${selectedGroup.label}`;
+  let emoji = '😅';
+  if (pct >= 90) emoji = '🏆';
+  else if (pct >= 70) emoji = '🎯';
+  else if (pct >= 50) emoji = '📚';
+  document.getElementById('r-emoji').textContent = emoji;
+}
+
+buildMenu();
+</script>
+</body>
+</html>
